@@ -1,34 +1,39 @@
+#[macro_use] extern crate serde_derive;
+#[macro_use] extern crate failure;
 extern crate chrono;
-extern crate failure;
+extern crate serde;
 
 use chrono::{Utc, Datelike};
 use failure::Error;
+use std::path::Path;
 
 //mod input;
 //mod submit;
 //mod html;
 mod http;
 
-#[derive(Clone)]
-enum Part {
-    One,
-    Two,
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum Level {
+    First,
+    Second,
 }
 
-impl Default for Part {
+impl Default for Level {
     fn default() -> Self {
-        Part::One
+        Self::First
     }
 }
 
 #[derive(Default, Clone)]
-struct Aoc {
+pub struct Aoc {
     year: Option<i32>,
     day: Option<u32>,
-    part: Part,
+    level: Level,
     brief: Vec<String>,
     input: Option<String>,
-    solution: Vec<String>
+    solution: Vec<String>,
+    cookie: String,
 }
 
 impl Aoc {
@@ -48,11 +53,16 @@ impl Aoc {
         self
     }
 
+    pub fn cookie(&mut self, cookie: String) -> &mut Self {
+        self.cookie = cookie;
+        self
+    }
+
     /// Initialise (finish building)
     pub fn init(&mut self) -> Self {
         let now = Utc::now();
-        self.year = self.year.or(Some(now.year()));
-        self.day = self.day.or(Some(now.day()));
+        self.year = self.year.or_else(|| Some(now.year()));
+        self.day = self.day.or_else(|| Some(now.day()));
         self.clone()
     }
 
