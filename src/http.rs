@@ -46,8 +46,8 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
     let cookie = format!("session={}", aoc.cookie);
 
     let level = match aoc.level {
-        Level::First => 0,
-        Level::Second => 1,
+        Level::First => 1,
+        Level::Second => 2,
     };
 
     let mut params = HashMap::new();
