@@ -1,15 +1,19 @@
-#[macro_use] extern crate serde_derive;
 #[macro_use] extern crate failure;
+#[macro_use] extern crate serde_derive;
 extern crate chrono;
 extern crate serde;
+extern crate serde_json;
 
 use chrono::{Utc, Datelike};
 use failure::Error;
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::Write;
 use std::path::Path;
 
 mod http;
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Hash, PartialEq, Eq, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum Level {
     First,
@@ -22,14 +26,14 @@ impl Default for Level {
     }
 }
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Aoc {
     year: Option<i32>,
     day: Option<u32>,
-    level: Level,
-    brief: Vec<String>,
     input: Option<String>,
-    solution: Vec<String>,
+    level: Level,
+    brief: HashMap<Level, String>,
+    solution: HashMap<Level, String>,
     cookie: String,
 }
 
@@ -63,7 +67,7 @@ impl Aoc {
         self.clone()
     }
 
-    /// Restore the problem from JSON or TOML
+    /// Restore the problem from JSON
     pub fn restore(&mut self, path: impl AsRef<Path>) -> Self {
         Self::default()
     }
@@ -71,6 +75,7 @@ impl Aoc {
     /// Get the problem brief as HTML and sanitise it to plain text
     pub fn get_brief(&self) -> Result<String, Error> {
         http::get_brief(self)
+        //Ok(self.brief)
     }
 
     /// Get the input data
@@ -89,23 +94,15 @@ impl Aoc {
     }
 
     /// get a JSON representation for the AoC problem
-    pub fn as_json() -> String {
-        "".to_string()
-    }
-
-    /// get a TOML representation for the AoC problem
-    pub fn as_toml() -> String {
-        "".to_string()
+    pub fn as_json(&self) -> Result<String, Error> {
+        Ok(serde_json::to_string(self)?)
     }
 
     /// Save JSON to path
-    pub fn write_json(&self, path: impl AsRef<Path>) {
-
-    }
-
-    /// Save TOML to path
-    pub fn write_toml(&self, path: impl AsRef<Path>) {
-
+    pub fn write_json(&self, path: impl AsRef<Path>) -> Result<(), Error> {
+        let mut file = File::create(path)?;
+        file.write_all(self.as_json()?.as_bytes())?;
+        Ok(())
     }
 
     /// Get time until release
