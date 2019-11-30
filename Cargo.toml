@@ -1,0 +1,14 @@
+[package]
+name = "aoc-client"
+version = "0.1.0"
+authors = ["Ed Cragg <drq.11235@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.10"
+failure = "0.1.6"
+html5ever = "0.25.1"
+tendril = "0.4.1"
+reqwest = "0.9.22"
