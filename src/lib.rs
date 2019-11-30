@@ -7,9 +7,6 @@ use chrono::{Utc, Datelike};
 use failure::Error;
 use std::path::Path;
 
-//mod input;
-//mod submit;
-//mod html;
 mod http;
 
 #[derive(Clone, Serialize, Deserialize)]
