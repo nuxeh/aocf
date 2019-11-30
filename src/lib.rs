@@ -69,17 +69,18 @@ impl Aoc {
     }
 
     /// Get the problem brief as HTML and sanitise it to plain text
-    pub fn get_brief() -> Result<String, Error> {
-        Ok("".to_string())
+    pub fn get_brief(&self) -> Result<String, Error> {
+        http::get_brief(self)
     }
 
     /// Get the input data
-    pub fn get_input() -> Result<String, Error> {
-        Ok("".to_string())
+    pub fn get_input(&self) -> Result<String, Error> {
+        http::get_input(self)
     }
 
     /// Submit the solution
-    pub fn submit() -> Result<(), Error> {
+    pub fn submit(&mut self, solution: &str) -> Result<(), Error> {
+        let response = http::submit(self, solution)?;
         Ok(())
     }
 
