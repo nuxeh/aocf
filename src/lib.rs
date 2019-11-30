@@ -74,8 +74,10 @@ impl Aoc {
     }
 
     /// Get the input data
-    pub fn get_input(&self) -> Result<String, Error> {
-        http::get_input(self)
+    pub fn get_input(&mut self) -> Result<String, Error> {
+        let input = http::get_input(self)?;
+        self.input = Some(input.clone());
+        Ok(input)
     }
 
     /// Submit the solution
