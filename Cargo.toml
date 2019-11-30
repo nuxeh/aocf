@@ -1,5 +1,5 @@
 [package]
-name = "aoc-client"
+name = "aoc-fetch"
 version = "0.1.0"
 authors = ["Ed Cragg <drq.11235@gmail.com>"]
 edition = "2018"
