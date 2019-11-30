@@ -15,8 +15,8 @@ fn get_url(aoc: &Aoc) -> Result<String, Error> {
     Ok(url)
 }
 
-pub fn get_input(aoc: &Aoc) -> Result<String, Error> {
-    let url = format!("{}/input", get_url(aoc)?);
+fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
+    let url = format!("{}/{}", get_url(aoc)?, suffix);
     let cookie = format!("session={}", aoc.cookie);
     let input = Client::new()
         .get(&url)
@@ -25,5 +25,15 @@ pub fn get_input(aoc: &Aoc) -> Result<String, Error> {
         .error_for_status()?
         .text()?;
 
+    Ok(input)
+}
+
+pub fn get_brief(aoc: &Aoc) -> Result<String, Error> {
+    let brief = get_content(aoc, "input")?;
+    Ok(brief)
+}
+
+pub fn get_input(aoc: &Aoc) -> Result<String, Error> {
+    let input = get_content(aoc, "input")?;
     Ok(input)
 }
