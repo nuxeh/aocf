@@ -46,7 +46,7 @@ fn main() {
         .init();
 
     println!("{}", aoc.get_brief().unwrap());
-    //println!("{}", aoc.get_input().unwrap());
+    println!("{}", aoc.get_input().unwrap());
 
     aoc.write().unwrap();
 
