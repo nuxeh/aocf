@@ -1,12 +1,13 @@
+extern crate regex;
 extern crate reqwest;
 extern crate html2md;
 
 use crate::{Aoc, Level};
 use html2md::parse_html;
 use failure::Error;
+use regex::Regex;
 use reqwest::Client;
 use reqwest::header::COOKIE;
-use scraper::{Html, Selector};
 use std::collections::HashMap;
 
 const BASE: &str = "https://adventofcode.com";
@@ -68,18 +69,9 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
     Ok(resp)
 }
 
-fn get_html_section(contents: &str, section: &str) -> Result<String, Error> {
-    let fragment = Html::parse_document(contents);
-    let selector = Selector::parse(section).unwrap();
-
-    let result = fragment
-        .select(&selector)
-        .next()
-        .map(|n| n.text().collect());
-
-    if result.is_none() {
-        bail!("failed to find section {}", section);
-    };
-
-    Ok(result.unwrap())
+fn get_html_section(contents: &str, section: &str) -> Option<String> {
+    let regex = format!("<{}>((.|\n)*?)</{}>", section, section);
+    let regex = Regex::new(&regex).unwrap();
+    let html = regex.captures(contents)?.get(1)?.as_str();
+    Some(html.to_string())
 }
