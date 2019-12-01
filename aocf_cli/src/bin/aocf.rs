@@ -48,5 +48,7 @@ fn main() {
     println!("{}", aoc.get_brief().unwrap());
     //println!("{}", aoc.get_input().unwrap());
 
+    aoc.write().unwrap();
+
     println!("Hello, world!");
 }

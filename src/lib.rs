@@ -13,7 +13,7 @@ use std::path::{Path, PathBuf};
 
 mod http;
 
-#[derive(Hash, PartialEq, Eq, Clone, Serialize, Deserialize)]
+#[derive(Hash, PartialEq, Eq, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum Level {
     First,
@@ -79,8 +79,9 @@ impl Aoc {
 
     /// Get the problem brief as HTML and sanitise it to plain text
     pub fn get_brief(&mut self) -> Result<String, Error> {
-        http::get_brief(self)
-        //Ok(self.brief)
+        let brief = http::get_brief(self)?;
+        self.brief.insert(self.level, brief.clone());
+        Ok(brief)
     }
 
     /// Get the input data
