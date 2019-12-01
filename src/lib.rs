@@ -74,7 +74,12 @@ impl Aoc {
         let now = Utc::now();
         self.year = self.year.or_else(|| Some(now.year()));
         self.day = self.day.or_else(|| Some(now.day()));
-        self.clone()
+
+        if let Ok(aoc) = self.load() {
+            aoc
+        } else {
+            self.clone()
+        }
     }
 
     /// Get the problem brief as HTML and sanitise it to plain text
@@ -134,7 +139,7 @@ impl Aoc {
         }
     }
 
-    pub fn load(&self) -> Result<Self, Error> {
+    fn load(&self) -> Result<Self, Error> {
         if let Some(ref p) = self.cache_path {
             Self::load_json_from(p)
         } else {
