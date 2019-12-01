@@ -55,8 +55,8 @@ impl Aoc {
         self
     }
 
-    pub fn cookie(&mut self, cookie: String) -> &mut Self {
-        self.cookie = cookie;
+    pub fn cookie(&mut self, cookie: &str) -> &mut Self {
+        self.cookie = cookie.to_string();
         self
     }
 

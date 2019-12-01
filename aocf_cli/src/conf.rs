@@ -6,7 +6,6 @@ use std::path::Path;
 #[derive(Serialize, Deserialize)]
 pub struct Conf {
     editor: String,
-    cookie: String,
     year: i32,
 }
 
