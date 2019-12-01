@@ -7,7 +7,7 @@ extern crate serde_json;
 use chrono::{Utc, Datelike};
 use failure::Error;
 use std::collections::HashMap;
-use std::fs::File;
+use std::fs::{File, read_to_string};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
@@ -64,8 +64,8 @@ impl Aoc {
 //    pub fn cache<P>(&mut self, path: P) -> &mut Self
 //        where P: AsRef<Path> + std::clone::Clone,
 //    {
-    pub fn cache<P>(&mut self, path: &Path) -> &mut Self {
-        self.cache_path = Some(path.to_path_buf());
+    pub fn cache<P>(&mut self, path: Option<&Path>) -> &mut Self {
+        self.cache_path = self.cache_path.as_ref().map(PathBuf::from);
         self
     }
 
@@ -74,12 +74,10 @@ impl Aoc {
         let now = Utc::now();
         self.year = self.year.or_else(|| Some(now.year()));
         self.day = self.day.or_else(|| Some(now.day()));
+        if self.cache_path.is_none() {
+            self.cache_path = Some(PathBuf::from("./.aocf/cache"));
+        }
         self.clone()
-    }
-
-    /// Restore the problem from JSON
-    pub fn load_json_from(path: impl AsRef<Path>) -> Result<Self, Error> {
-        Ok(Self::default())
     }
 
     /// Get the problem brief as HTML and sanitise it to plain text
@@ -113,11 +111,34 @@ impl Aoc {
         Ok(serde_json::from_str(json)?)
     }
 
-    /// Save JSON to path
+    /// Save problem to path as JSON
     pub fn write_json_to(&self, path: impl AsRef<Path>) -> Result<(), Error> {
         let mut file = File::create(path)?;
         file.write_all(self.to_json()?.as_bytes())?;
         Ok(())
+    }
+
+    /// Load the problem from JSON
+    pub fn load_json_from(path: impl AsRef<Path>) -> Result<Self, Error> {
+        let json = read_to_string(path)?;
+        Self::from_json(&json)
+    }
+
+    /// Write JSON cache
+    pub fn write(&self) -> Result<(), Error> {
+        if let Some(ref p) = self.cache_path {
+            self.write_json_to(p)
+        } else {
+            bail!("cache path is not set");
+        }
+    }
+
+    pub fn load(&self) -> Result<Self, Error> {
+        if let Some(ref p) = self.cache_path {
+            Self::load_json_from(p)
+        } else {
+            bail!("cache path is not set");
+        }
     }
 
     /// Get time until release
