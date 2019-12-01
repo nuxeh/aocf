@@ -6,6 +6,7 @@ use html2md::parse_html;
 use failure::Error;
 use reqwest::Client;
 use reqwest::header::COOKIE;
+use scraper::{Html, Selector};
 use std::collections::HashMap;
 
 const BASE: &str = "https://adventofcode.com";
@@ -32,6 +33,7 @@ fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
 
 pub fn get_brief(aoc: &Aoc) -> Result<String, Error> {
     let brief = get_content(aoc, "")?;
+    let brief = get_html_section(&brief, "main").unwrap_or("".to_string());
     let brief = parse_html(&brief);
     Ok(brief)
 }
@@ -64,4 +66,20 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
 
     let resp = parse_html(&resp);
     Ok(resp)
+}
+
+fn get_html_section(contents: &str, section: &str) -> Result<String, Error> {
+    let fragment = Html::parse_document(contents);
+    let selector = Selector::parse(section).unwrap();
+
+    let result = fragment
+        .select(&selector)
+        .next()
+        .map(|n| n.text().collect());
+
+    if result.is_none() {
+        bail!("failed to find section {}", section);
+    };
+
+    Ok(result.unwrap())
 }
