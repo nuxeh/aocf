@@ -7,7 +7,7 @@ extern crate serde_json;
 use chrono::{Utc, Datelike};
 use failure::Error;
 use std::collections::HashMap;
-use std::fs::{File, read_to_string};
+use std::fs::{File, read_to_string, create_dir_all};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
@@ -110,6 +110,7 @@ impl Aoc {
 
     /// Save problem to path as JSON
     pub fn write_json_to(&self, path: impl AsRef<Path>) -> Result<(), Error> {
+        ensure_parent_dir(path.as_ref())?;
         let mut file = File::create(path)?;
         file.write_all(self.to_json()?.as_bytes())?;
         Ok(())
@@ -149,5 +150,23 @@ impl Aoc {
     /// Get time until release
     pub fn get_time_until_release() {
 
+    }
+}
+
+fn ensure_parent_dir(file: impl AsRef<Path>) -> Result<bool, Error> {
+    let without_path = file.as_ref().components().count() == 1;
+
+    match file.as_ref().parent() {
+        Some(dir) if !without_path => {
+            let create = !dir.exists();
+            if create {
+                eprintln!(
+                    "directory `{}` doesn't exist, creating it", dir.display()
+                );
+                create_dir_all(dir)?;
+            }
+            Ok(create)
+        },
+        _ => Ok(false),
     }
 }
