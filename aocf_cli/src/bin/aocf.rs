@@ -5,6 +5,7 @@ extern crate aocf;
 extern crate docopt;
 extern crate toml;
 
+use aocf::Aoc;
 use docopt::Docopt;
 use failure::Error;
 
@@ -22,21 +23,30 @@ Examples:
     aocf fetch
 
 Options:
-    -h --help   Show this help message.
-    --version   Print version.
-    --day       Specify challenge day.
-    --year      Specify challenge year.
+    -h --help                   Show this help message.
+    --version                   Print version.
+    --day=<day>                 Specify challenge day.
+    --year=<year>               Specify challenge year.
 ";
 
 #[derive(Deserialize)]
 struct Cliargs {
-
+    flag_day: Option<u32>,
+    flag_year: Option<i32>,
 }
 
 fn main() {
     let args: Cliargs = Docopt::new(USAGE)
         .and_then(|d| d.version(Some("0.1.0".to_string())).deserialize())
         .unwrap_or_else(|e| e.exit());
+
+    let mut aoc = Aoc::new()
+        .year(args.flag_year)
+        .day(args.flag_day)
+        .init();
+
+    println!("{}", aoc.get_brief().unwrap());
+    //println!("{}", aoc.get_input().unwrap());
 
     println!("Hello, world!");
 }

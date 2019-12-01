@@ -31,7 +31,7 @@ fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
 }
 
 pub fn get_brief(aoc: &Aoc) -> Result<String, Error> {
-    let brief = get_content(aoc, "/input")?;
+    let brief = get_content(aoc, "")?;
     let brief = parse_html(&brief);
     Ok(brief)
 }

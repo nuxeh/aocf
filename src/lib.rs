@@ -78,7 +78,7 @@ impl Aoc {
     }
 
     /// Get the problem brief as HTML and sanitise it to plain text
-    pub fn get_brief(&self) -> Result<String, Error> {
+    pub fn get_brief(&mut self) -> Result<String, Error> {
         http::get_brief(self)
         //Ok(self.brief)
     }
