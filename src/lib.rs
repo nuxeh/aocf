@@ -153,20 +153,11 @@ impl Aoc {
     }
 }
 
-fn ensure_parent_dir(file: impl AsRef<Path>) -> Result<bool, Error> {
+fn ensure_parent_dir(file: impl AsRef<Path>) -> Result<(), Error> {
     let without_path = file.as_ref().components().count() == 1;
-
     match file.as_ref().parent() {
-        Some(dir) if !without_path => {
-            let create = !dir.exists();
-            if create {
-                eprintln!(
-                    "directory `{}` doesn't exist, creating it", dir.display()
-                );
-                create_dir_all(dir)?;
-            }
-            Ok(create)
-        },
-        _ => Ok(false),
-    }
+        Some(dir) if !without_path => create_dir_all(dir)?,
+        _ => (),
+    };
+    Ok(())
 }
