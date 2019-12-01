@@ -7,7 +7,7 @@ use html2md::parse_html;
 use failure::Error;
 use regex::Regex;
 use reqwest::Client;
-use reqwest::header::COOKIE;
+use reqwest::header;
 use std::collections::HashMap;
 
 const BASE: &str = "https://adventofcode.com";
@@ -25,7 +25,8 @@ fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
     let cookie = format!("session={}", aoc.cookie);
     let input = Client::new()
         .get(&url)
-        .header(COOKIE, cookie)
+        .header(header::COOKIE, cookie)
+        .header(header::USER_AGENT, "Mozilla/5.0")
         .send()?
         .error_for_status()?
         .text()?;
@@ -59,7 +60,8 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
 
     let resp = Client::new()
         .post(&url)
-        .header(COOKIE, cookie)
+        .header(header::COOKIE, cookie)
+        .header(header::USER_AGENT, "Mozilla/5.0")
         .form(&params)
         .send()?
         .error_for_status()?
