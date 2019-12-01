@@ -74,13 +74,6 @@ impl Aoc {
         let now = Utc::now();
         self.year = self.year.or_else(|| Some(now.year()));
         self.day = self.day.or_else(|| Some(now.day()));
-        if self.cache_path.is_none() {
-            let p = format!(
-                "./.aocf/cache/aoc{}_{}.json",
-                self.year.unwrap(), self.day.unwrap()
-            );
-            self.cache_path = Some(PathBuf::from(&p));
-        }
         self.clone()
     }
 
@@ -143,6 +136,14 @@ impl Aoc {
         } else {
             bail!("cache path is not set");
         }
+    }
+
+    fn get_default_cache_path(&self) -> PathBuf {
+        let p = format!(
+            "./.aocf/cache/aoc{}_{}.json",
+            self.year.unwrap(), self.day.unwrap()
+        );
+        PathBuf::from(&p)
     }
 
     /// Get time until release
