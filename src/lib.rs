@@ -75,7 +75,11 @@ impl Aoc {
         self.year = self.year.or_else(|| Some(now.year()));
         self.day = self.day.or_else(|| Some(now.day()));
         if self.cache_path.is_none() {
-            self.cache_path = Some(PathBuf::from("./.aocf/cache"));
+            let p = format!(
+                "./.aocf/cache/aoc{}_{}.json",
+                self.year.unwrap(), self.day.unwrap()
+            );
+            self.cache_path = Some(PathBuf::from(&p));
         }
         self.clone()
     }
