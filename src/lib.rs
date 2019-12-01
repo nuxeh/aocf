@@ -79,9 +79,11 @@ impl Aoc {
 
     /// Get the problem brief as HTML and sanitise it to plain text
     pub fn get_brief(&mut self) -> Result<String, Error> {
-        let brief = http::get_brief(self)?;
-        self.brief.insert(self.level, brief.clone());
-        Ok(brief)
+        if self.brief.get(&self.level).is_none() {
+            let brief = http::get_brief(self)?;
+            self.brief.insert(self.level, brief.clone());
+        };
+        Ok(self.brief.get(&self.level).unwrap().to_string())
     }
 
     /// Get the input data
