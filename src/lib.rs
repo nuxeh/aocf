@@ -101,9 +101,8 @@ impl Aoc {
     }
 
     /// Submit the solution
-    pub fn submit(&mut self, solution: &str) -> Result<(), Error> {
-        let response = http::submit(self, solution)?;
-        Ok(())
+    pub fn submit(&mut self, solution: &str) -> Result<String, Error> {
+        http::submit(self, solution)
     }
 
     /// get a JSON representation for the AoC problem

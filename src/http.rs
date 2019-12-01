@@ -65,7 +65,9 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
         .error_for_status()?
         .text()?;
 
+    let resp = get_html_section(&resp, "main").unwrap_or("".to_string());
     let resp = parse_html(&resp);
+    let resp = resp.trim().to_string();
     Ok(resp)
 }
 
