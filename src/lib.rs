@@ -9,7 +9,7 @@ use failure::Error;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 mod http;
 
@@ -35,6 +35,7 @@ pub struct Aoc {
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
     cookie: String,
+    cache_path: Option<PathBuf>,
 }
 
 impl Aoc {
@@ -59,6 +60,15 @@ impl Aoc {
         self
     }
 
+    /// Set the cache path
+//    pub fn cache<P>(&mut self, path: P) -> &mut Self
+//        where P: AsRef<Path> + std::clone::Clone,
+//    {
+    pub fn cache<P>(&mut self, path: &Path) -> &mut Self {
+        self.cache_path = Some(path.to_path_buf());
+        self
+    }
+
     /// Initialise (finish building)
     pub fn init(&mut self) -> Self {
         let now = Utc::now();
@@ -68,8 +78,8 @@ impl Aoc {
     }
 
     /// Restore the problem from JSON
-    pub fn restore(&mut self, path: impl AsRef<Path>) -> Self {
-        Self::default()
+    pub fn load_json_from(path: impl AsRef<Path>) -> Result<Self, Error> {
+        Ok(Self::default())
     }
 
     /// Get the problem brief as HTML and sanitise it to plain text
@@ -94,14 +104,19 @@ impl Aoc {
     }
 
     /// get a JSON representation for the AoC problem
-    pub fn as_json(&self) -> Result<String, Error> {
+    pub fn to_json(&self) -> Result<String, Error> {
         Ok(serde_json::to_string(self)?)
     }
 
+    /// get an AoC problem from JSON representation
+    pub fn from_json(json: &str) -> Result<Self, Error> {
+        Ok(serde_json::from_str(json)?)
+    }
+
     /// Save JSON to path
-    pub fn write_json(&self, path: impl AsRef<Path>) -> Result<(), Error> {
+    pub fn write_json_to(&self, path: impl AsRef<Path>) -> Result<(), Error> {
         let mut file = File::create(path)?;
-        file.write_all(self.as_json()?.as_bytes())?;
+        file.write_all(self.to_json()?.as_bytes())?;
         Ok(())
     }
 
