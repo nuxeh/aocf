@@ -41,7 +41,7 @@ pub fn get_brief(aoc: &Aoc) -> Result<String, Error> {
 }
 
 pub fn get_input(aoc: &Aoc) -> Result<String, Error> {
-    let input = get_content(aoc, "input")?;
+    let input = get_content(aoc, "/input")?;
     Ok(input)
 }
 
