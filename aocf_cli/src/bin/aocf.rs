@@ -13,7 +13,7 @@ const USAGE: &str = "
 Advent of Code Swiss army knife.
 
 Usage:
-    aocf [options]
+    aocf [<command>] [options]
 
 Examples:
     aocf brief
@@ -31,8 +31,16 @@ Options:
 
 #[derive(Deserialize)]
 struct Cliargs {
+    arg_command: Command,
     flag_day: Option<u32>,
     flag_year: Option<i32>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum Command {
+    Input,
+    Brief,
 }
 
 fn main() {
@@ -43,12 +51,14 @@ fn main() {
     let mut aoc = Aoc::new()
         .year(args.flag_year)
         .day(args.flag_day)
+        .cookie("cookie")
         .init();
 
-    println!("{}", aoc.get_brief().unwrap());
-    println!("{}", aoc.get_input().unwrap());
+
+    match args.arg_command {
+        Command::Brief => println!("{}", aoc.get_brief().unwrap()),
+        Command::Input => println!("{}", aoc.get_input().unwrap()),
+    };
 
     aoc.write().unwrap();
-
-    println!("Hello, world!");
 }
