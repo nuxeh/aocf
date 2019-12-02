@@ -88,8 +88,10 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 }
 
 fn status(aoc: &Aoc) {
-    eprintln!("problem: {} day {} part {}",
-        aoc.year.unwrap(),
-        aoc.day.unwrap(),
-        aoc.level);
+    eprintln!("year: {}", aoc.year.unwrap());
+    eprintln!("day: {}", aoc.day.unwrap());
+    eprintln!("level: {}", aoc.level);
+    if !aoc.title.is_empty() {
+        eprintln!("title: {}", aoc.title);
+    };
 }
