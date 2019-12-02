@@ -55,25 +55,32 @@ fn main() {
         .and_then(|d| d.version(Some("0.1.0".to_string())).deserialize())
         .unwrap_or_else(|e| e.exit());
 
+    run(&args).unwrap_or_else(|err| {
+        eprintln!("error: {}", err);
+    });
+}
+
+fn run(args: &Cliargs) -> Result<(), Error> {
     let mut aoc = Aoc::new()
         .year(args.flag_year)
         .day(args.flag_day)
         .cookie("cookie")
         .init();
 
-
     match args.arg_command {
         Command::Fetch => {
-            let _ = aoc.get_brief().unwrap();
-            let _ = aoc.get_input().unwrap();
+            let _ = aoc.get_brief()?;
+            let _ = aoc.get_input()?;
         },
-        Command::Brief => println!("{}", aoc.get_brief().unwrap()),
-        Command::Input => println!("{}", aoc.get_input().unwrap()),
+        Command::Brief => println!("{}", aoc.get_brief()?),
+        Command::Input => println!("{}", aoc.get_input()?),
         Command::Submit => {
-            println!("{}", aoc.submit(&args.arg_arguments[0]).unwrap());
+            println!("{}", aoc.submit(&args.arg_arguments[0])?);
         },
-        Command::Advance => aoc.advance().unwrap(),
+        Command::Advance => aoc.advance()?,
     };
 
-    aoc.write().unwrap();
+    aoc.write()?;
+
+    Ok(())
 }
