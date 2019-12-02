@@ -88,8 +88,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 }
 
 fn status(aoc: &Aoc) {
-    eprintln!("year: {}", aoc.year.unwrap());
-    eprintln!("day: {}", aoc.day.unwrap());
+    eprintln!("{:<6} {}", "year:", aoc.year.unwrap());
+    eprintln!("day:   {}", aoc.day.unwrap());
     eprintln!("level: {}", aoc.level);
     if let Some(t) = &aoc.title {
         eprintln!("title: {}", t);
