@@ -20,6 +20,7 @@ Examples:
     aocf brief
     aocf input
     aocf submit <solution>
+    aocf advance
     aocf add cookie
     aocf init
     aocf fetch
@@ -45,6 +46,7 @@ enum Command {
     Input,
     Brief,
     Submit,
+    Advance,
 }
 
 fn main() {
@@ -65,6 +67,7 @@ fn main() {
         Command::Submit => {
             println!("{}", aoc.submit(&args.arg_arguments[0]).unwrap());
         },
+        Command::Advance => aoc.advance().unwrap(),
     };
 
     aoc.write().unwrap();

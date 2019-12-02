@@ -138,6 +138,13 @@ impl Aoc {
         }
     }
 
+    pub fn advance(&mut self) -> Result<(), Error> {
+        match self.level {
+            Level::First => { self.level = Level::Second; Ok(()) },
+            Level::Second => bail!("already on part 2"),
+        }
+    }
+
     fn load(&self) -> Result<Self, Error> {
         if let Some(ref p) = self.cache_path {
             Self::load_json_from(p)
