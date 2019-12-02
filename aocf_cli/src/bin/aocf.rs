@@ -48,6 +48,7 @@ enum Command {
     Brief,
     Submit,
     Advance,
+    Status,
 }
 
 fn main() {
@@ -78,9 +79,17 @@ fn run(args: &Cliargs) -> Result<(), Error> {
             println!("{}", aoc.submit(&args.arg_arguments[0])?);
         },
         Command::Advance => aoc.advance()?,
+        Command::Status => status(&aoc),
     };
 
     aoc.write()?;
 
     Ok(())
+}
+
+fn status(aoc: &Aoc) {
+    eprintln!("problem: {} day {} part {}",
+        aoc.year.unwrap(),
+        aoc.day.unwrap(),
+        aoc.level);
 }

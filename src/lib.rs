@@ -7,15 +7,17 @@ extern crate serde_json;
 use chrono::{Utc, Datelike};
 use failure::Error;
 use std::collections::HashMap;
+use std::fmt;
 use std::fs::{File, read_to_string, create_dir_all};
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use serde::{Serializer, Serialize};
 
 mod http;
 
 #[derive(Hash, PartialEq, Eq, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-enum Level {
+pub enum Level {
     First,
     Second,
 }
@@ -26,12 +28,22 @@ impl Default for Level {
     }
 }
 
+impl fmt::Display for Level {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = match self {
+            Level::First => "first",
+            Level::Second => "second",
+        };
+        write!(f, "{}", s)
+    }
+}
+
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Aoc {
-    year: Option<i32>,
-    day: Option<u32>,
+    pub year: Option<i32>,
+    pub day: Option<u32>,
+    pub level: Level,
     input: Option<String>,
-    level: Level,
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
     cookie: String,
