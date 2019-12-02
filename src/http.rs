@@ -32,12 +32,13 @@ fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
     Ok(input)
 }
 
-pub fn get_brief(aoc: &Aoc) -> Result<String, Error> {
+pub fn get_brief(aoc: &Aoc) -> Result<(String, String), Error> {
     let brief = get_content(aoc, "")?;
+    let title = get_title(&brief).unwrap_or(String::new());
     let brief = get_html_section(&brief, "main").unwrap_or("".to_string());
     let brief = parse_html(&brief);
     let brief = brief.trim().to_string();
-    Ok(brief)
+    Ok((title, brief))
 }
 
 pub fn get_input(aoc: &Aoc) -> Result<String, Error> {
@@ -77,4 +78,15 @@ fn get_html_section(contents: &str, section: &str) -> Option<String> {
     let regex = Regex::new(&regex).unwrap();
     let html = regex.captures(contents)?.get(1)?.as_str();
     Some(html.to_string())
+}
+
+pub fn verify(text: &str) -> bool {
+    text.contains("That's the correct answer!")
+}
+
+fn get_title(brief: &str) -> Option<String> {
+    let regex = format!("<h2>--- Day .*?: (.*?) ---</h2>");
+    let regex = Regex::new(&regex).unwrap();
+    let title = regex.captures(brief)?.get(1)?.as_str();
+    Some(title.to_string())
 }
