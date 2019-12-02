@@ -43,7 +43,7 @@ pub struct Aoc {
     pub year: Option<i32>,
     pub day: Option<u32>,
     pub level: Level,
-    pub title: String,
+    pub title: Option<String>,
     input: Option<String>,
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
@@ -99,7 +99,7 @@ impl Aoc {
     pub fn get_brief(&mut self) -> Result<String, Error> {
         if self.brief.get(&self.level).is_none() {
             let brief = http::get_brief(self)?;
-            self.title = brief.0;
+            self.title = Some(brief.0);
             self.brief.insert(self.level, brief.1);
         };
         Ok(self.brief.get(&self.level).unwrap().to_string())
