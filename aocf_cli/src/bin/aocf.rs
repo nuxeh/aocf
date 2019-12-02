@@ -43,6 +43,7 @@ struct Cliargs {
 #[derive(Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum Command {
+    Fetch,
     Input,
     Brief,
     Submit,
@@ -62,6 +63,10 @@ fn main() {
 
 
     match args.arg_command {
+        Command::Fetch => {
+            let _ = aoc.get_brief().unwrap();
+            let _ = aoc.get_input().unwrap();
+        },
         Command::Brief => println!("{}", aoc.get_brief().unwrap()),
         Command::Input => println!("{}", aoc.get_input().unwrap()),
         Command::Submit => {
