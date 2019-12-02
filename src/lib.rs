@@ -65,7 +65,7 @@ impl Aoc {
 //        where P: AsRef<Path> + std::clone::Clone,
 //    {
     pub fn cache<P>(&mut self, path: Option<&Path>) -> &mut Self {
-        self.cache_path = self.cache_path.as_ref().map(PathBuf::from);
+        self.cache_path = path.as_ref().map(PathBuf::from);
         self
     }
 
