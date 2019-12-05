@@ -97,7 +97,7 @@ impl Aoc {
         }
     }
 
-    /// Get the problem brief as HTML and sanitise it to plain text
+    /// Get the problem brief as HTML and sanitise it to markdown
     pub fn get_brief(&mut self, force: bool) -> Result<String, Error> {
         if self.brief.get(&self.level).is_none() || force {
             let brief = http::get_brief(self)?;
