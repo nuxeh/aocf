@@ -90,7 +90,8 @@ impl Aoc {
         self.year = self.year.or_else(|| Some(now.year()));
         self.day = self.day.or_else(|| Some(now.day()));
 
-        if let Ok(aoc) = self.load() {
+        if let Ok(mut aoc) = self.load() {
+            aoc.cookie = self.cookie.clone();
             aoc
         } else {
             self.clone()
