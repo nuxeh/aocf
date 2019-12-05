@@ -44,6 +44,7 @@ pub struct Aoc {
     pub day: Option<u32>,
     pub level: Level,
     pub title: Option<String>,
+    pub stars: Option<u8>,
     input: Option<String>,
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
@@ -119,9 +120,18 @@ impl Aoc {
     pub fn submit(&mut self, solution: &str) -> Result<String, Error> {
         let resp = http::submit(self, solution)?;
         if http::verify(&resp) {
+            self.add_star();
             self.advance().unwrap_or(());
         }
         Ok(resp)
+    }
+
+    fn add_star(&mut self) {
+        if let Some(ref stars) = self.stars {
+            self.stars = Some(stars + 1);
+        } else {
+            self.stars = Some(1);
+        };
     }
 
     /// get a JSON representation for the AoC problem

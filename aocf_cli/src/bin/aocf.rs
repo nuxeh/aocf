@@ -105,4 +105,9 @@ fn status(aoc: &Aoc) {
     if let Some(t) = &aoc.title {
         eprintln!("title: {}", t);
     };
+    if let Some(s) = aoc.stars {
+        eprint!("stars: ");
+        for _ in 0..s { eprint!("*"); };
+        eprint!("\n");
+    };
 }
