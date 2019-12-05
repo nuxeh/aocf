@@ -4,9 +4,17 @@ use std::io::Write;
 use std::path::Path;
 
 #[derive(Serialize, Deserialize)]
+enum ExecMode {
+    Stdin,
+    File,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct Conf {
-    editor: String,
     year: i32,
+    editor: String,
+    exec: Option<String>,
+    mode: Option<ExecMode>,
 }
 
 impl Conf {

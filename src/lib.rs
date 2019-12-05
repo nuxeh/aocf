@@ -47,8 +47,9 @@ pub struct Aoc {
     input: Option<String>,
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
-    cookie: String,
     cache_path: Option<PathBuf>,
+    #[serde(skip)]
+    cookie: String,
 }
 
 impl Aoc {

@@ -17,20 +17,27 @@ Usage:
 
 Examples:
     aocf [options] submit <solution>
-    aocf brief
-    aocf input
+    aocf brief [--edit]
+    aocf input [--edit]
     aocf submit <solution>
     aocf advance
-    aocf add cookie
+    aocf set-cookie
     aocf init
     aocf fetch
+    aocf set [--global] <name> <value>
+    aocf gen-readme
 
 Options:
     -h --help                   Show this help message.
     --version                   Print version.
     --day=<day>                 Specify challenge day.
     --year=<year>               Specify challenge year.
+    --global                    Set variable globally for AoC root.
+    --edit                      Open in editor.
 ";
+
+// - https://github.com/rabuf/advent-of-code/blob/master/2019/2019.03.org
+// - tag git log
 
 #[derive(Deserialize)]
 struct Cliargs {
@@ -40,8 +47,8 @@ struct Cliargs {
     flag_year: Option<i32>,
 }
 
-#[derive(Deserialize)]
-#[serde(rename_all = "lowercase")]
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
 enum Command {
     Fetch,
     Input,
@@ -49,6 +56,8 @@ enum Command {
     Submit,
     Advance,
     Status,
+    SetCookie,
+    Edit,
 }
 
 fn main() {
@@ -80,6 +89,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         },
         Command::Advance => aoc.advance()?,
         Command::Status => status(&aoc),
+        Command::SetCookie => {},
+        _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
     aoc.write()?;
