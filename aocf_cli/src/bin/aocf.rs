@@ -34,6 +34,7 @@ Options:
     --year=<year>               Specify challenge year.
     --global                    Set variable globally for AoC root.
     --edit                      Open in editor.
+    --force                     Force overwriting the cache.
 ";
 
 // - https://github.com/rabuf/advent-of-code/blob/master/2019/2019.03.org
@@ -45,6 +46,7 @@ struct Cliargs {
     arg_arguments: Vec<String>,
     flag_day: Option<u32>,
     flag_year: Option<i32>,
+    flag_force: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -79,10 +81,10 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
     match args.arg_command {
         Command::Fetch => {
-            let _ = aoc.get_brief()?;
+            let _ = aoc.get_brief(args.flag_force)?;
             let _ = aoc.get_input()?;
         },
-        Command::Brief => println!("{}", aoc.get_brief()?),
+        Command::Brief => println!("{}", aoc.get_brief(args.flag_force)?),
         Command::Input => println!("{}", aoc.get_input()?),
         Command::Submit => {
             println!("{}", aoc.submit(&args.arg_arguments[0])?);

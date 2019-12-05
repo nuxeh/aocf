@@ -98,8 +98,8 @@ impl Aoc {
     }
 
     /// Get the problem brief as HTML and sanitise it to plain text
-    pub fn get_brief(&mut self) -> Result<String, Error> {
-        if self.brief.get(&self.level).is_none() {
+    pub fn get_brief(&mut self, force: bool) -> Result<String, Error> {
+        if self.brief.get(&self.level).is_none() || force {
             let brief = http::get_brief(self)?;
             self.title = Some(brief.0);
             self.brief.insert(self.level, brief.1);
