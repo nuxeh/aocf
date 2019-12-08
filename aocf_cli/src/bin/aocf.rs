@@ -2,10 +2,12 @@
 #[macro_use] extern crate failure;
 #[macro_use] extern crate serde_derive;
 extern crate aocf;
+extern crate chrono;
 extern crate docopt;
 extern crate toml;
 
 use aocf::Aoc;
+use chrono::{Utc, Datelike};
 use docopt::Docopt;
 use failure::Error;
 
@@ -32,6 +34,7 @@ Options:
     --version                   Print version.
     --day=<day>                 Specify challenge day.
     --year=<year>               Specify challenge year.
+    --now                       Use current day of the month.
     --global                    Set variable globally for AoC root.
     --edit                      Open in editor.
     --force                     Force overwriting the cache.
@@ -46,6 +49,7 @@ struct Cliargs {
     arg_arguments: Vec<String>,
     flag_day: Option<u32>,
     flag_year: Option<i32>,
+    flag_now: bool,
     flag_force: bool,
 }
 
@@ -73,9 +77,16 @@ fn main() {
 }
 
 fn run(args: &Cliargs) -> Result<(), Error> {
+    let (day, year) = if args.flag_now {
+        let now = Utc::now();
+        (Some(now.year()), Some(now.day()))
+    } else {
+        (None, None)
+    };
+
     let mut aoc = Aoc::new()
-        .year(args.flag_year)
-        .day(args.flag_day)
+        .year(day.or_else(|| args.flag_year))
+        .day(year.or_else(|| args.flag_day))
         .cookie("cookie")
         .init();
 

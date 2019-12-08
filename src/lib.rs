@@ -1,10 +1,8 @@
 #[macro_use] extern crate failure;
 #[macro_use] extern crate serde_derive;
-extern crate chrono;
 extern crate serde;
 extern crate serde_json;
 
-use chrono::{Utc, Datelike};
 use failure::Error;
 use std::collections::HashMap;
 use std::fmt;
@@ -86,10 +84,6 @@ impl Aoc {
 
     /// Initialise (finish building)
     pub fn init(&mut self) -> Self {
-        let now = Utc::now();
-        self.year = self.year.or_else(|| Some(now.year()));
-        self.day = self.day.or_else(|| Some(now.day()));
-
         if let Ok(mut aoc) = self.load() {
             aoc.cookie = self.cookie.clone();
             aoc
@@ -164,7 +158,7 @@ impl Aoc {
         if let Some(ref p) = self.cache_path {
             self.write_json_to(p)
         } else {
-            self.write_json_to(&self.get_default_cache_path())
+            self.write_json_to(&self.get_default_cache_path()?)
         }
     }
 
@@ -179,16 +173,17 @@ impl Aoc {
         if let Some(ref p) = self.cache_path {
             Self::load_json_from(p)
         } else {
-            Self::load_json_from(&self.get_default_cache_path())
+            Self::load_json_from(&self.get_default_cache_path()?)
         }
     }
 
-    fn get_default_cache_path(&self) -> PathBuf {
-        let p = format!(
-            "./.aocf/cache/aoc{}_{}.json",
-            self.year.unwrap(), self.day.unwrap()
-        );
-        PathBuf::from(&p)
+    fn get_default_cache_path(&self) -> Result<PathBuf, Error> {
+        if let (Some(y), Some(d)) = (self.year, self.day) {
+            let p = format!("./.aocf/cache/aoc{}_{}.json", y, d);
+            Ok(PathBuf::from(&p))
+        } else {
+            bail!("day or year not set");
+        }
     }
 
     /// Get time until release

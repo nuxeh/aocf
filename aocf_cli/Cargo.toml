@@ -11,6 +11,7 @@ tempfile = "*"
 
 [dependencies]
 aocf = {version = "*", path = ".."}
+chrono = "0.4.10"
 docopt = "1.1.0"
 failure = "0.1.6"
 log = "0.4.8"

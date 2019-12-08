@@ -15,7 +15,7 @@ const BASE: &str = "https://adventofcode.com";
 fn get_url(aoc: &Aoc) -> Result<String, Error> {
     let url = match (aoc.day, aoc.year) {
         (Some(d), Some(y)) => format!("{}/{}/day/{}", BASE, y, d),
-        _ => bail!("day or year not initialised"),
+        _ => bail!("day or year not set"),
     };
     Ok(url)
 }
