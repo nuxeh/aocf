@@ -81,7 +81,7 @@ fn get_html_section(contents: &str, section: &str) -> Option<String> {
 }
 
 pub fn verify(text: &str) -> bool {
-    text.contains("That's the correct answer!")
+    text.contains("That's the right answer!")
 }
 
 fn get_title(brief: &str) -> Option<String> {
