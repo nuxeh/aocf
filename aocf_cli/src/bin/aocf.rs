@@ -83,10 +83,14 @@ fn find_config() -> Result<Conf, Error> {
     Ok(Conf::load(&conf_path)?)
 }
 
+fn now() -> (Option<i32>, Option<u32>) {
+    let now = Utc::now();
+    (Some(now.year()), Some(now.day()))
+}
+
 fn run(args: &Cliargs) -> Result<(), Error> {
     let (mut day, mut year) = if args.flag_now {
-        let now = Utc::now();
-        (Some(now.year()), Some(now.day()))
+        now()
     } else {
         (None, None)
     };
@@ -101,8 +105,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     };
 
     let mut aoc = Aoc::new()
-        .year(day.or_else(|| Some(conf.day)))
-        .day(year.or_else(|| Some(conf.year)))
+        .year(year.or_else(|| Some(conf.year)))
+        .day(day.or_else(|| Some(conf.day)))
         .cookie("cookie")
         .init();
 
