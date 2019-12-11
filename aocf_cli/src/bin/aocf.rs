@@ -95,14 +95,14 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     year = year.or_else(|| args.flag_day);
 
     let conf = if day.is_none() || year.is_none() {
-        find_config()?
+        find_config().map_err(|e| format_err!("loading config: {}", e))?
     } else {
         Conf::default()
     };
 
     let mut aoc = Aoc::new()
-        .year(day)
-        .day(year)
+        .year(day.or_else(|| Some(conf.day)))
+        .day(year.or_else(|| Some(conf.year)))
         .cookie("cookie")
         .init();
 

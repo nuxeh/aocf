@@ -12,8 +12,8 @@ enum ExecMode {
 
 #[derive(Serialize, Deserialize)]
 pub struct Conf {
-    year: i32,
-    day: u32,
+    pub year: u32,
+    pub day: i32,
     editor: String,
     pager: String,
     exec: Option<String>,
