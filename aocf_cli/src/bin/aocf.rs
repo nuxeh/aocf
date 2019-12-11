@@ -57,7 +57,7 @@ struct Cliargs {
     flag_force: bool,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "kebab-case")]
 enum Command {
     Fetch,
@@ -103,7 +103,9 @@ fn get_day_year(args: &Cliargs) -> (Option<i32>, Option<u32>) {
 fn run(args: &Cliargs) -> Result<(), Error> {
     let (day, year) = get_day_year(args);
 
-    let conf = if day.is_none() || year.is_none() {
+    let init_flagged = args.arg_command == Command::Init;
+
+    let conf = if (day.is_none() || year.is_none()) && !init_flagged {
         find_config().map_err(|e| format_err!("loading config: {}", e))?
     } else {
         Conf::default()
@@ -152,9 +154,23 @@ fn status(aoc: &Aoc) {
 }
 
 fn init(args: &Cliargs) -> Result<(), Error> {
-    fs::create_dir_all(env::current_dir()?.join(".aocf"))?;
-    let mut conf = Conf::default();
+    let conf_path = env::current_dir()?.join(".aocf");
+    fs::create_dir_all(&conf_path)?;
+
+    let config_path = conf_path.join("config");
+    if config_path.exists() {
+        bail!("configuration already exists at {}", config_path.display());
+    };
+
     let (day, year) = get_day_year(args);
-    //conf.year
+    let mut conf = Conf::default();
+    if let Some(d) = day {
+        conf.day = d;
+    };
+    if let Some(y) = year {
+        conf.year = y;
+    };
+    conf.write(&config_path)?;
+
     Ok(())
 }
