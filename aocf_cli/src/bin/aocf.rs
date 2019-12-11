@@ -12,6 +12,8 @@ use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
 use docopt::Docopt;
 use failure::Error;
+use std::env;
+use std::fs;
 
 const USAGE: &str = "
 Advent of Code Swiss army knife.
@@ -64,6 +66,7 @@ enum Command {
     Submit,
     Advance,
     Status,
+    Init,
     SetCookie,
     Edit,
 }
@@ -83,20 +86,22 @@ fn find_config() -> Result<Conf, Error> {
     Ok(Conf::load(&conf_path)?)
 }
 
-fn now() -> (Option<i32>, Option<u32>) {
-    let now = Utc::now();
-    (Some(now.year()), Some(now.day()))
-}
-
-fn run(args: &Cliargs) -> Result<(), Error> {
+fn get_day_year(args: &Cliargs) -> (Option<i32>, Option<u32>) {
     let (mut day, mut year) = if args.flag_now {
-        now()
+        let now = Utc::now();
+        (Some(now.year()), Some(now.day()))
     } else {
         (None, None)
     };
 
     day = day.or_else(|| args.flag_year);
     year = year.or_else(|| args.flag_day);
+
+    (day, year)
+}
+
+fn run(args: &Cliargs) -> Result<(), Error> {
+    let (day, year) = get_day_year(args);
 
     let conf = if day.is_none() || year.is_none() {
         find_config().map_err(|e| format_err!("loading config: {}", e))?
@@ -122,6 +127,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         },
         Command::Advance => aoc.advance()?,
         Command::Status => status(&aoc),
+        Command::Init => init(&args)?,
         Command::SetCookie => {},
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
@@ -143,4 +149,12 @@ fn status(aoc: &Aoc) {
         for _ in 0..s { eprint!("*"); };
         eprint!("\n");
     };
+}
+
+fn init(args: &Cliargs) -> Result<(), Error> {
+    fs::create_dir_all(env::current_dir()?.join(".aocf"))?;
+    let mut conf = Conf::default();
+    let (day, year) = get_day_year(args);
+    //conf.year
+    Ok(())
 }
