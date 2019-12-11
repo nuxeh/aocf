@@ -95,7 +95,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     year = year.or_else(|| args.flag_day);
 
     let conf = if day.is_none() || year.is_none() {
-        find_config()?
+        find_config().map_err(|e| format_err!("{}. initialise?", e))?
     } else {
         Conf::default()
     };
