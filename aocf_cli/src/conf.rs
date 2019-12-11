@@ -57,7 +57,7 @@ pub fn find() -> Result<PathBuf, Error> {
 
     match conf_dir {
         Some(dir) => Ok(dir.to_path_buf()),
-        None => bail!("no aocf configuration found"),
+        None => bail!("no configuration found"),
     }
 }
 
