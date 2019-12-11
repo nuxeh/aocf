@@ -7,6 +7,8 @@ extern crate docopt;
 extern crate toml;
 
 use aocf::Aoc;
+use aocf_cli::conf;
+use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
 use docopt::Docopt;
 use failure::Error;
@@ -76,17 +78,31 @@ fn main() {
     });
 }
 
+fn find_config() -> Result<Conf, Error> {
+    let conf_path = conf::find()?;
+    Ok(Conf::load(&conf_path)?)
+}
+
 fn run(args: &Cliargs) -> Result<(), Error> {
-    let (day, year) = if args.flag_now {
+    let (mut day, mut year) = if args.flag_now {
         let now = Utc::now();
         (Some(now.year()), Some(now.day()))
     } else {
         (None, None)
     };
 
+    day = day.or_else(|| args.flag_year);
+    year = year.or_else(|| args.flag_day);
+
+    let conf = if day.is_none() || year.is_none() {
+        find_config()?
+    } else {
+        Conf::default()
+    };
+
     let mut aoc = Aoc::new()
-        .year(day.or_else(|| args.flag_year))
-        .day(year.or_else(|| args.flag_day))
+        .year(day)
+        .day(year)
         .cookie("cookie")
         .init();
 

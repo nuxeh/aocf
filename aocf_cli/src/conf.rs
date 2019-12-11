@@ -13,9 +13,24 @@ enum ExecMode {
 #[derive(Serialize, Deserialize)]
 pub struct Conf {
     year: i32,
+    day: u32,
     editor: String,
+    pager: String,
     exec: Option<String>,
     mode: Option<ExecMode>,
+}
+
+impl Default for Conf {
+    fn default() -> Self {
+        Self {
+            year: 2015,
+            day: 1,
+            editor: "vim".into(),
+            pager: "less".into(),
+            exec: None,
+            mode: None,
+        }
+    }
 }
 
 impl Conf {
