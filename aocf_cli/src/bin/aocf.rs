@@ -128,7 +128,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
             println!("{}", aoc.submit(&args.arg_arguments[0])?);
         },
         Command::Advance => aoc.advance()?,
-        Command::Status => status(&aoc),
+        Command::Status => status(&aoc)?,
         Command::Init => init(&args)?,
         Command::SetCookie => {},
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
@@ -139,9 +139,13 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     Ok(())
 }
 
-fn status(aoc: &Aoc) {
-    eprintln!("{:<6} {}", "year:", aoc.year.unwrap());
-    eprintln!("day:   {}", aoc.day.unwrap());
+fn status(aoc: &Aoc) -> Result<(), Error> {
+    if let (Some(d), Some(y)) = (aoc.day, aoc.year) {
+        eprintln!("{:<6} {}", "year:", y);
+        eprintln!("day:   {}", d);
+    } else {
+        bail!("day or year not set")
+    }
     eprintln!("level: {}", aoc.level);
     if let Some(t) = &aoc.title {
         eprintln!("title: {}", t);
@@ -151,6 +155,7 @@ fn status(aoc: &Aoc) {
         for _ in 0..s { eprint!("*"); };
         eprint!("\n");
     };
+    Ok(())
 }
 
 fn init(args: &Cliargs) -> Result<(), Error> {
