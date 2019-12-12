@@ -15,7 +15,6 @@ use failure::Error;
 use std::env;
 use std::fs;
 use std::io::Write;
-use std::path::Path;
 
 const USAGE: &str = "
 Advent of Code Swiss army knife.
@@ -102,10 +101,6 @@ fn get_day_year(args: &Cliargs) -> (Option<u32>, Option<i32>) {
     year = year.or_else(|| args.flag_year);
 
     (day, year)
-}
-
-fn add_line_to_file(path: impl AsRef<Path>, line: String) -> Result<(), Error> {
-    Ok(())
 }
 
 fn run(args: &Cliargs) -> Result<(), Error> {
