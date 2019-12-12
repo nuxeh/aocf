@@ -121,10 +121,15 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
     let conf_hash = conf.calc_hash();
 
+    let cookie_path = conf::find_root()?.join(".aocf/cookie");
+    if !cookie_path.exists() {
+        bail!("cookie not found, please run add-cookie");
+    }
+
     let mut aoc = Aoc::new()
         .year(year.or_else(|| Some(conf.year)))
         .day(day.or_else(|| Some(conf.day)))
-        .cookie(&get_cookie()?)
+        .cookie_file(&cookie_path)
         .init()?;
 
     match args.arg_command {
@@ -231,9 +236,4 @@ fn set_cookie(cookie: &str) -> Result<(), Error> {
     let cookie_path = conf::find_root()?.join(".aocf/cookie");
     let mut file = fs::File::create(cookie_path)?;
     Ok(file.write_all(cookie.as_bytes())?)
-}
-
-fn get_cookie() -> Result<String, Error> {
-    let cookie_path = conf::find_root()?.join(".aocf/cookie");
-    Ok(fs::read_to_string(&cookie_path)?)
 }
