@@ -114,7 +114,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     } else if day.is_none() || year.is_none() {
         find_config().map_err(|e| format_err!("loading config: {}", e))?
     } else {
-        Conf::default()
+        find_config().unwrap_or_else(|_| Conf::default())
     };
 
     let conf_hash = conf.calc_hash();
@@ -218,8 +218,7 @@ fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error
     }
 
     if conf.calc_hash() != conf_hash {
-        eprintln!("switched to {} day {}", conf_hash, conf.calc_hash());
-        eprintln!("switched to {} day {}", conf.year, conf.day);
+        eprintln!("switched to year {}, day {}", conf.year, conf.day);
         write_conf(conf)?;
     };
 

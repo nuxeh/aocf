@@ -6,13 +6,13 @@ use std::hash::{Hash, Hasher};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-#[derive(Serialize, Deserialize, Hash)]
+#[derive(Serialize, Deserialize, Debug, Hash)]
 enum ExecMode {
     Stdin,
     File,
 }
 
-#[derive(Serialize, Deserialize, Hash)]
+#[derive(Serialize, Deserialize, Debug, Hash)]
 pub struct Conf {
     pub year: i32,
     pub day: u32,
