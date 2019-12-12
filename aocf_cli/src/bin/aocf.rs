@@ -196,6 +196,8 @@ fn init(args: &Cliargs) -> Result<(), Error> {
     };
     conf.write(&config_path)?;
 
+    eprintln!("initialised config at {}", config_path.display());
+
     Ok(())
 }
 
