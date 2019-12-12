@@ -14,7 +14,7 @@ fn main() {
     let mut aoc = Aoc::new()
         .year(Some(2019))
         .day(Some(1))
-        .cookie_file("./examples/cookie")
+        .cookie_file("./cookie")
         .init()
         .unwrap();
 
