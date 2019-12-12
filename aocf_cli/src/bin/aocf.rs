@@ -104,11 +104,15 @@ fn get_day_year(args: &Cliargs) -> (Option<u32>, Option<i32>) {
 }
 
 fn run(args: &Cliargs) -> Result<(), Error> {
+    match args.arg_command {
+        Command::Init => return Ok(init(&args)?),
+        Command::SetCookie => return Ok(set_cookie(&args.arg_arguments[0])?),
+        _ => (),
+    };
+
     let (day, year) = get_day_year(args);
 
-    let mut conf = if args.arg_command == Command::Init {
-        Conf::default()
-    } else if day.is_none() || year.is_none() {
+    let mut conf = if day.is_none() || year.is_none() {
         find_config().map_err(|e| format_err!("loading config: {}", e))?
     } else {
         find_config().unwrap_or_else(|_| Conf::default())
@@ -116,15 +120,10 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
     let conf_hash = conf.calc_hash();
 
-    let cookie_path = if let Ok(r) = conf::find_root() {
-        let path = r.join(".aocf/cookie");
-        if !path.exists() {
-            bail!("cookie not found, please run add-cookie");
-        };
-        path
-    } else {
-        "".into()
-    };
+    let cookie_path = conf::find_root()?.join(".aocf/cookie");
+    if !cookie_path.exists() {
+        bail!("cookie not found, please run set-cookie");
+    }
 
     let mut aoc = Aoc::new()
         .year(year.or_else(|| Some(conf.year)))
@@ -144,9 +143,9 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         },
         Command::Advance => aoc.advance()?,
         Command::Status => status(&aoc)?,
-        Command::Init => init(&args)?,
         Command::Checkout => checkout(&mut conf, conf_hash, &args)?,
-        Command::SetCookie => {set_cookie(&args.arg_arguments[0])?},
+        Command::Init => (),
+        Command::SetCookie => (),
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
