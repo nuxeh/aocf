@@ -1,16 +1,18 @@
 use failure::Error;
+use std::collections::hash_map::DefaultHasher;
 use std::env::current_dir;
 use std::fs::{File, read_to_string};
+use std::hash::{Hash, Hasher};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Hash)]
 enum ExecMode {
     Stdin,
     File,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Hash)]
 pub struct Conf {
     pub year: u32,
     pub day: i32,
@@ -45,10 +47,16 @@ impl Conf {
         file.write_all(toml::ser::to_string(&self)?.as_bytes())?;
         Ok(())
     }
+
+    pub fn calc_hash(&self) -> u64 {
+        let mut s = DefaultHasher::new();
+        self.hash(&mut s);
+        s.finish()
+    }
 }
 
 /// Find configuration directory in current directory or its ancestors
-pub fn find() -> Result<PathBuf, Error> {
+pub fn find_root() -> Result<PathBuf, Error> {
     let cwd = current_dir()?;
 
     let conf_dir = cwd.ancestors()
@@ -70,19 +78,19 @@ mod tests {
     use std::fs;
 
     #[test]
-    fn test_find() {
+    fn test_find_root() {
         let tmp = tempdir().unwrap();
         let tmp_path = tmp.path();
         let tmp_sub = tmp_path.join("im/in/a-subdir");
         fs::create_dir_all(&tmp_sub).unwrap();
 
-        env::set_current_dir(tmp_path);
-        assert!(find().is_err());
-        fs::create_dir(tmp_path.join(".aocf"));
-        assert!(find().is_err());
-        let mut conf = File::create(tmp_path.join(".aocf/config"));
-        assert!(find().is_ok());
-        env::set_current_dir(tmp_sub);
-        assert_eq!(find().unwrap(), tmp_path);
+        env::set_current_dir(tmp_path).unwrap();
+        assert!(find_root().is_err());
+        fs::create_dir(tmp_path.join(".aocf")).unwrap();
+        assert!(find_root().is_err());
+        File::create(tmp_path.join(".aocf/config")).unwrap();
+        assert!(find_root().is_ok());
+        env::set_current_dir(tmp_sub).unwrap();
+        assert_eq!(find_root().unwrap(), tmp_path);
     }
 }

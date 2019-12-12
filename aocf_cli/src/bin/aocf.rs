@@ -14,6 +14,7 @@ use docopt::Docopt;
 use failure::Error;
 use std::env;
 use std::fs;
+use std::path::Path;
 
 const USAGE: &str = "
 Advent of Code Swiss army knife.
@@ -69,6 +70,7 @@ enum Command {
     Init,
     SetCookie,
     Edit,
+    Checkout,
 }
 
 fn main() {
@@ -82,8 +84,13 @@ fn main() {
 }
 
 fn find_config() -> Result<Conf, Error> {
-    let conf_path = conf::find()?;
+    let conf_path = conf::find_root()?.join(".aocf/config");
     Ok(Conf::load(&conf_path)?)
+}
+
+fn write_conf(conf: &Conf) -> Result<(), Error> {
+    let conf_path = conf::find_root()?.join(".aocf/config");
+    Ok(conf.write(&conf_path)?)
 }
 
 fn get_day_year(args: &Cliargs) -> (Option<i32>, Option<u32>) {
@@ -100,16 +107,22 @@ fn get_day_year(args: &Cliargs) -> (Option<i32>, Option<u32>) {
     (day, year)
 }
 
+fn add_line_to_file(path: impl AsRef<Path>, line: String) -> Result<(), Error> {
+    Ok(())
+}
+
 fn run(args: &Cliargs) -> Result<(), Error> {
     let (day, year) = get_day_year(args);
 
-    let init_flagged = args.arg_command == Command::Init;
-
-    let conf = if (day.is_none() || year.is_none()) && !init_flagged {
+    let mut conf = if args.arg_command == Command::Init {
+        Conf::default()
+    } else if day.is_none() || year.is_none() {
         find_config().map_err(|e| format_err!("loading config: {}", e))?
     } else {
         Conf::default()
     };
+
+    let conf_hash = conf.calc_hash();
 
     let mut aoc = Aoc::new()
         .year(year.or_else(|| Some(conf.year)))
@@ -130,9 +143,14 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         Command::Advance => aoc.advance()?,
         Command::Status => status(&aoc)?,
         Command::Init => init(&args)?,
-        Command::SetCookie => {},
+        Command::Checkout => checkout(&mut conf, conf_hash, &args)?,
+        Command::SetCookie => {set_cookie(&args)?},
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
+
+    if conf.calc_hash() != conf_hash {
+        write_conf(&conf)?;
+    }
 
     aoc.write()?;
 
@@ -177,5 +195,30 @@ fn init(args: &Cliargs) -> Result<(), Error> {
     };
     conf.write(&config_path)?;
 
+    Ok(())
+}
+
+fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error> {
+    let (day_f, year_f) = get_day_year(args);
+    let day_a: Option<i32> = Some(args.arg_arguments.get(0).unwrap_or(&"0".to_string()).parse()?);
+    let year_a: Option<u32> = Some(args.arg_arguments.get(1).unwrap_or(&"0".to_string()).parse()?);
+
+    if let Some(y) = year_a.or(year_f) {
+        conf.year = y;
+    }
+    if let Some(d) = day_a.or(day_f) {
+        conf.day = d;
+    }
+
+    if conf.calc_hash() != conf_hash {
+        eprintln!("switched to {} day {}", conf_hash, conf.calc_hash());
+        eprintln!("switched to {} day {}", conf.year, conf.day);
+        write_conf(conf)?;
+    };
+
+    Ok(())
+}
+
+fn set_cookie(args: &Cliargs) -> Result<(), Error> {
     Ok(())
 }
