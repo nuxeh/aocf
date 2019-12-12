@@ -116,10 +116,15 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
     let conf_hash = conf.calc_hash();
 
-    let cookie_path = conf::find_root()?.join(".aocf/cookie");
-    if !cookie_path.exists() {
-        bail!("cookie not found, please run add-cookie");
-    }
+    let cookie_path = if let Ok(r) = conf::find_root() {
+        let path = r.join(".aocf/cookie");
+        if !path.exists() {
+            bail!("cookie not found, please run add-cookie");
+        };
+        path
+    } else {
+        "".into()
+    };
 
     let mut aoc = Aoc::new()
         .year(year.or_else(|| Some(conf.year)))
