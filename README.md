@@ -42,3 +42,5 @@ $ aocf status
 ```
 
 More details can be found in in the CLI's [readme](./aocf_cli/README.md).
+
+How to get your [session cookie](./cookie.md).
