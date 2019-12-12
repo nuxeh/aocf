@@ -15,5 +15,15 @@ cargo install aocf_cli
 Initialise an aocf repository, similar to how you would initialise a git
 repository. Data and configuration for aocf is kept in `./.aocf`.
 
-### `init`
+### `add-cookie`
+
+### `checkout`
+
+### `fetch`
+
+### `brief`
+
+### `input`
+
+### `status`
 
