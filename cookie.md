@@ -3,4 +3,4 @@ To get the session cookie you need to retrieve personal input, for example in Ch
 * Hit Ctrl-Shift-I for developer tools.
 * Copy the session token text from the Application tab, as shown below:
 
-![cookie.png]
+![](cookie.png)
