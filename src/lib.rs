@@ -38,8 +38,8 @@ impl fmt::Display for Level {
 
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Aoc {
-    pub year: Option<u32>,
-    pub day: Option<i32>,
+    pub year: Option<i32>,
+    pub day: Option<u32>,
     pub level: Level,
     pub title: Option<String>,
     pub stars: Option<u8>,
@@ -57,13 +57,13 @@ impl Aoc {
     }
 
     /// Set the year
-    pub fn year(&mut self, year: Option<u32>) -> &mut Self {
+    pub fn year(&mut self, year: Option<i32>) -> &mut Self {
         self.year = year;
         self
     }
 
     /// Set the day
-    pub fn day(&mut self, day: Option<i32>) -> &mut Self {
+    pub fn day(&mut self, day: Option<u32>) -> &mut Self {
         self.day = day;
         self
     }

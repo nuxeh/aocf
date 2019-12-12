@@ -23,13 +23,8 @@ Usage:
     aocf [options] [<command>] [<arguments>...]
 
 Examples:
-    aocf [options] submit <solution>
-    aocf brief [--edit]
-    aocf input [--edit]
-    aocf submit <solution>
-    aocf advance
-    aocf set-cookie
     aocf init
+    aocf checkout <day> [<year>]
     aocf fetch
     aocf set [--global] <name> <value>
     aocf gen-readme
@@ -93,16 +88,16 @@ fn write_conf(conf: &Conf) -> Result<(), Error> {
     Ok(conf.write(&conf_path)?)
 }
 
-fn get_day_year(args: &Cliargs) -> (Option<i32>, Option<u32>) {
+fn get_day_year(args: &Cliargs) -> (Option<u32>, Option<i32>) {
     let (mut day, mut year) = if args.flag_now {
         let now = Utc::now();
-        (Some(now.year()), Some(now.day()))
+        (Some(now.day()), Some(now.year()))
     } else {
         (None, None)
     };
 
-    day = day.or_else(|| args.flag_year);
-    year = year.or_else(|| args.flag_day);
+    day = day.or_else(|| args.flag_day);
+    year = year.or_else(|| args.flag_year);
 
     (day, year)
 }
@@ -200,14 +195,26 @@ fn init(args: &Cliargs) -> Result<(), Error> {
 
 fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error> {
     let (day_f, year_f) = get_day_year(args);
-    let day_a: Option<i32> = Some(args.arg_arguments.get(0).unwrap_or(&"0".to_string()).parse()?);
-    let year_a: Option<u32> = Some(args.arg_arguments.get(1).unwrap_or(&"0".to_string()).parse()?);
 
-    if let Some(y) = year_a.or(year_f) {
+    let day = if let Some(d) = args.arg_arguments.get(0) {
+        d.parse()?
+    } else if let Some(d) = day_f {
+        d
+    } else {
+        bail!("no day provided")
+    };
+
+    let year = if let Some(y) = args.arg_arguments.get(1) {
+        Some(y.parse()?)
+    } else if let Some(y) = year_f {
+        Some(y)
+    } else {
+        None
+    };
+
+    conf.day = day;
+    if let Some(y) = year {
         conf.year = y;
-    }
-    if let Some(d) = day_a.or(day_f) {
-        conf.day = d;
     }
 
     if conf.calc_hash() != conf_hash {
