@@ -125,7 +125,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         .year(year.or_else(|| Some(conf.year)))
         .day(day.or_else(|| Some(conf.day)))
         .cookie(&get_cookie()?)
-        .init();
+        .init()?;
 
     match args.arg_command {
         Command::Fetch => {

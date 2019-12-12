@@ -47,6 +47,7 @@ pub struct Aoc {
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
     cache_path: Option<PathBuf>,
+    cookie_path: Option<PathBuf>,
     #[serde(skip)]
     cookie: String,
 }
@@ -68,8 +69,15 @@ impl Aoc {
         self
     }
 
+    /// Set cookie string
     pub fn cookie(&mut self, cookie: &str) -> &mut Self {
         self.cookie = cookie.to_string();
+        self
+    }
+
+    /// Set cookie file
+    pub fn cookie_file(&mut self, path: impl AsRef<Path>) -> &mut Self {
+        self.cookie_path = Some(path.as_ref().to_path_buf());
         self
     }
 
@@ -83,12 +91,16 @@ impl Aoc {
     }
 
     /// Initialise (finish building)
-    pub fn init(&mut self) -> Self {
+    pub fn init(&mut self) -> Result<Self, Error> {
+        if let Some(p) = &self.cookie_path {
+            self.cookie = read_to_string(p)?
+        };
+
         if let Ok(mut aoc) = self.load() {
             aoc.cookie = self.cookie.clone();
-            aoc
+            Ok(aoc)
         } else {
-            self.clone()
+            Ok(self.clone())
         }
     }
 
