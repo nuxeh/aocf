@@ -2,9 +2,26 @@
 
 A crate and CLI helper tool for [Advent of Code](https://adventofcode.com/).
 
-The crate may be used as follows, for getting input data for a task:
+The crate may be used as follows, for getting input data for a task as a
+string:
 
-```
+```rust
+extern crate aocf;
+
+use aocf::Aoc;
+
+fn main() {
+    let mut aoc = Aoc::new()
+        .year(Some(2019))
+        .day(Some(1))
+        .cookie_file("./examples/cookie")
+        .init()
+        .unwrap();
+
+    let input = aoc.get_input();
+
+    println!("{}", input);
+}
 ```
 
 Downloaded data is cached as JSON and queried each time the `Aoc` is
