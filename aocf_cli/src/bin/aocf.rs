@@ -14,6 +14,7 @@ use docopt::Docopt;
 use failure::Error;
 use std::env;
 use std::fs;
+use std::io::Write;
 use std::path::Path;
 
 const USAGE: &str = "
@@ -24,6 +25,7 @@ Usage:
 
 Examples:
     aocf init
+    aocf set-cookie <content>
     aocf checkout <day> [<year>]
     aocf fetch
     aocf set [--global] <name> <value>
@@ -139,7 +141,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         Command::Status => status(&aoc)?,
         Command::Init => init(&args)?,
         Command::Checkout => checkout(&mut conf, conf_hash, &args)?,
-        Command::SetCookie => {set_cookie(&args)?},
+        Command::SetCookie => {set_cookie(&args.arg_arguments[0])?},
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
@@ -225,6 +227,8 @@ fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error
     Ok(())
 }
 
-fn set_cookie(args: &Cliargs) -> Result<(), Error> {
-    Ok(())
+fn set_cookie(cookie: &str) -> Result<(), Error> {
+    let cookie_path = conf::find_root()?.join(".aocf/cookie");
+    let mut file = fs::File::create(cookie_path)?;
+    Ok(file.write_all(cookie.as_bytes())?)
 }
