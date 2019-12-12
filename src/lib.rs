@@ -93,7 +93,7 @@ impl Aoc {
     /// Initialise (finish building)
     pub fn init(&mut self) -> Result<Self, Error> {
         if let Some(p) = &self.cookie_path {
-            self.cookie = read_to_string(p)?
+            self.cookie = read_to_string(p)?.trim().to_string()
         };
 
         if let Ok(mut aoc) = self.load() {
