@@ -3,6 +3,10 @@ name = "aocf"
 version = "0.1.0"
 authors = ["Ed Cragg <drq.11235@gmail.com>"]
 edition = "2018"
+licence = "ISC"
+readme = "README.md"
+description = "A crate and CLI helper tool for Advent of Code"
+repository = "https://github.com/nuxeh/aocf"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
