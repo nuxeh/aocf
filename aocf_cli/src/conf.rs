@@ -17,7 +17,7 @@ pub struct Conf {
     pub year: i32,
     pub day: u32,
     editor: String,
-    pager: String,
+    pub pager: String,
     exec: Option<String>,
     mode: Option<ExecMode>,
 }

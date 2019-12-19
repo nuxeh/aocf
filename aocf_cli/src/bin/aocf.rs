@@ -15,6 +15,7 @@ use failure::Error;
 use std::env;
 use std::fs;
 use std::io::Write;
+use std::process::{self, Stdio};
 
 const USAGE: &str = "
 Advent of Code Swiss army knife.
@@ -38,6 +39,7 @@ Options:
     --now                       Use current day of the month.
     --global                    Set variable globally for AoC root.
     --edit                      Open in editor.
+    --view                      Open in pager.
     --force                     Force overwriting the cache.
 ";
 
@@ -52,6 +54,7 @@ struct Cliargs {
     flag_year: Option<i32>,
     flag_now: bool,
     flag_force: bool,
+    flag_view: bool,
 }
 
 #[derive(Deserialize, PartialEq, Debug)]
@@ -136,8 +139,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
             let _ = aoc.get_brief(args.flag_force)?;
             let _ = aoc.get_input()?;
         },
-        Command::Brief => println!("{}", aoc.get_brief(args.flag_force)?),
-        Command::Input => println!("{}", aoc.get_input()?),
+        Command::Brief => display(args, &conf, &aoc.get_brief(args.flag_force)?)?,
+        Command::Input => display(args, &conf, &aoc.get_input()?)?,
         Command::Submit => {
             println!("{}", aoc.submit(&args.arg_arguments[0])?);
         },
@@ -155,6 +158,26 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
     aoc.write()?;
 
+    Ok(())
+}
+
+fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
+    if args.flag_view {
+        pager(conf, text)?;
+    } else {
+        println!("{}", text);
+    }
+    Ok(())
+}
+
+fn pager(conf: &Conf, text: &str) -> Result<(), Error> {
+    let process = process::Command::new(&conf.pager)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .spawn()?;
+
+    let mut stdin = process.stdin.unwrap();
+    stdin.write_all(text.as_bytes())?;
     Ok(())
 }
 
