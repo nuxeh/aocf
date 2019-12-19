@@ -137,10 +137,10 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     match args.arg_command {
         Command::Fetch => {
             let _ = aoc.get_brief(args.flag_force)?;
-            let _ = aoc.get_input()?;
+            let _ = aoc.get_input(args.flag_force)?;
         },
         Command::Brief => display(args, &conf, &aoc.get_brief(args.flag_force)?)?,
-        Command::Input => display(args, &conf, &aoc.get_input()?)?,
+        Command::Input => display(args, &conf, &aoc.get_input(args.flag_force)?)?,
         Command::Submit => {
             println!("{}", aoc.submit(&args.arg_arguments[0])?);
         },

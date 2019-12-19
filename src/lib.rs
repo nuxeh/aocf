@@ -115,8 +115,8 @@ impl Aoc {
     }
 
     /// Get the input data
-    pub fn get_input(&mut self) -> Result<String, Error> {
-        if self.input.is_none() {
+    pub fn get_input(&mut self, force: bool) -> Result<String, Error> {
+        if self.input.is_none() || force {
             let input = http::get_input(self)?;
             self.input = Some(input);
         }
