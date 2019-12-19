@@ -171,13 +171,14 @@ fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
 }
 
 fn pager(conf: &Conf, text: &str) -> Result<(), Error> {
-    let process = process::Command::new(&conf.pager)
+    let mut process = process::Command::new(&conf.pager)
         .stdin(Stdio::piped())
-        .stdout(Stdio::null())
         .spawn()?;
 
-    let mut stdin = process.stdin.unwrap();
+    let mut stdin = process.stdin.take().unwrap();
     stdin.write_all(text.as_bytes())?;
+    stdin.flush()?;
+    process.wait()?;
     Ok(())
 }
 
