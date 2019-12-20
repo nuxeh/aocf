@@ -143,7 +143,7 @@ impl Aoc {
 
     /// get a JSON representation for the AoC problem
     pub fn to_json(&self) -> Result<String, Error> {
-        Ok(serde_json::to_string(self)?)
+        Ok(serde_json::to_string_pretty(self)?)
     }
 
     /// get an AoC problem from JSON representation
