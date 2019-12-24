@@ -165,7 +165,7 @@ fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
     if args.flag_view {
         pager(conf, text)?;
     } else {
-        println!("{}", text);
+        print!("{}", text);
     }
     Ok(())
 }
