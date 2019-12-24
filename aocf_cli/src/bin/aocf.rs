@@ -178,6 +178,7 @@ fn pager(conf: &Conf, text: &str) -> Result<(), Error> {
     let mut stdin = process.stdin.take().unwrap();
     stdin.write_all(text.as_bytes())?;
     stdin.flush()?;
+    drop(stdin);
     process.wait()?;
     Ok(())
 }
