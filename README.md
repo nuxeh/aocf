@@ -1,5 +1,7 @@
 # `aocf` - Advent of Code fetch
 
+[![build status](https://api.travis-ci.org/nuxeh/aocf.png?branch=master)](https://travis-ci.org/nuxeh/a  ocf)
+
 A crate and CLI helper tool for [Advent of Code](https://adventofcode.com/).
 
 Written in Rust, but the CLI should be useful for development in any language.
