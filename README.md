@@ -33,7 +33,7 @@ The CLI has a workflow similar to Git, e.g.
 
 ```
 $ aocf init
-$ aocf add-cookie
+$ aocf add-cookie <your-cookie-text>
 $ aocf checkout 1 2019
 $ aocf fetch
 $ aocf brief
