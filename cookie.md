@@ -12,7 +12,7 @@ Firefox.
 To get the value manually, use "Storage Inspector" from the "Web Developer"
 menu, and copy the value of the cookie named "session".
 
-## Chrome:
+## Chrome
 
 * Hit Ctrl-Shift-I for developer tools.
 * Copy the "session" cookie text from the Application tab, as shown below:
