@@ -10,6 +10,8 @@ A CLI helper tool for [Advent of Code](https://adventofcode.com/).
 cargo install aocf_cli
 ```
 
+The tool will now be available as `aocf` for the user who ran this command.
+
 ## Commands
 
 ### `init`
@@ -41,3 +43,29 @@ Print the currently checked out day's input.
 
 Show the current status (for the currently checked out day).
 
+## Option flags
+
+### Time based flags
+
+* `--now`
+* `--year`
+* `--day`
+
+These can be used to override the current day or year used when fetching,
+initialising, or other commands. Generally commands will get the day and year
+from the configuration if these are not provided.
+
+### Viewing flags
+
+* `--view`
+
+If no flags are given, `aocf` will generally output content on standard output;
+if `--view` is provided, output will be piped to the pager programme specified
+in the root configuration (`.aocf/config`) as e.g. `pager = "less"`.
+
+### Retrieval flags
+
+* `--force`
+
+This will force retrieval from the AoC site, even if a cache eists already for
+the current day/problem part.
