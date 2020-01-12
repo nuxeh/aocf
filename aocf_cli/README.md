@@ -23,10 +23,11 @@ repository. Data and configuration for aocf is kept in `./.aocf`.
 
 Write out the cookie using provided session cookie string.
 
-### `set-cookie`
+### `get-cookie`
 
 Extract your session cookie from the Firefox cookie store. You should have
-previously logged in to Advent of code using Firefox.
+previously logged in to Advent of code using Firefox. This command will then
+set the cookie as with `set-cookie`.
 
 ### `checkout`
 
@@ -74,3 +75,7 @@ in the root configuration (`.aocf/config`) as e.g. `pager = "less"`.
 
 This will force retrieval from the AoC site, even if a cache eists already for
 the current day/problem part.
+
+### Cache
+
+The cache for data for each day is stored as JSON under `.aocf/cache`.
