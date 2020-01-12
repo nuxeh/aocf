@@ -3,6 +3,7 @@
 #[macro_use] extern crate serde_derive;
 extern crate aocf;
 extern crate chrono;
+extern crate dirs;
 extern crate docopt;
 extern crate tempfile;
 extern crate toml;
@@ -12,6 +13,7 @@ use aocf::cookie::get_session_cookie;
 use aocf_cli::conf;
 use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
+use dirs::home_dir;
 use docopt::Docopt;
 use failure::Error;
 use std::env;
@@ -271,7 +273,7 @@ fn set_cookie(cookie: &str) -> Result<(), Error> {
 }
 
 fn get_cookie() -> Result<(), Error> {
-    let cookie_store_dir = match env::home_dir() {
+    let cookie_store_dir = match home_dir() {
         None => bail!("can't get home directory"),
         Some(d) => d.join(".mozilla/firefox/igm7ysof.default/cookies.sqlite"),
     };
