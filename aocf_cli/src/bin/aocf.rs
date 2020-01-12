@@ -7,6 +7,7 @@ extern crate docopt;
 extern crate toml;
 
 use aocf::Aoc;
+use aocf::cookie::get_session_cookie;
 use aocf_cli::conf;
 use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
@@ -68,6 +69,7 @@ enum Command {
     Status,
     Init,
     SetCookie,
+    GetCookie,
     Edit,
     Checkout,
 }
@@ -110,6 +112,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     match args.arg_command {
         Command::Init => return Ok(init(&args)?),
         Command::SetCookie => return Ok(set_cookie(&args.arg_arguments[0])?),
+        Command::GetCookie => return Ok(get_cookie()?),
         _ => (),
     };
 
@@ -149,6 +152,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         Command::Checkout => checkout(&mut conf, conf_hash, &args)?,
         Command::Init => (),
         Command::SetCookie => (),
+        Command::GetCookie => (),
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
@@ -262,4 +266,10 @@ fn set_cookie(cookie: &str) -> Result<(), Error> {
     let cookie_path = conf::find_root()?.join(".aocf/cookie");
     let mut file = fs::File::create(cookie_path)?;
     Ok(file.write_all(cookie.as_bytes())?)
+}
+
+fn get_cookie() -> Result<(), Error> {
+    fs::copy("/home/ed/.mozilla/firefox/igm7ysof.default/cookies.sqlite", "/tmp/cookies.sqlite")?;
+    println!("{}", get_session_cookie("/tmp/cookies.sqlite")?);
+    Ok(())
 }

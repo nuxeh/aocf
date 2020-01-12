@@ -30,6 +30,6 @@ pub fn get_session_cookie(path: impl AsRef<Path>) -> Result<String, Error> {
     if records.is_empty() {
         bail!("no cookie found in cookie store");
     } else {
-        Ok(records[1].value.to_owned())
+        Ok(records[0].value.to_owned())
     }
 }

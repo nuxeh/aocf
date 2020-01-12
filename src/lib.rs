@@ -12,7 +12,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 mod http;
-mod cookie;
+pub mod cookie;
 
 #[derive(Hash, PartialEq, Eq, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
