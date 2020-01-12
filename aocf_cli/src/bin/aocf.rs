@@ -4,6 +4,7 @@
 extern crate aocf;
 extern crate chrono;
 extern crate docopt;
+extern crate tempfile;
 extern crate toml;
 
 use aocf::Aoc;
@@ -17,6 +18,7 @@ use std::env;
 use std::fs;
 use std::io::Write;
 use std::process::{self, Stdio};
+use tempfile::tempdir;
 
 const USAGE: &str = "
 Advent of Code Swiss army knife.
@@ -269,7 +271,17 @@ fn set_cookie(cookie: &str) -> Result<(), Error> {
 }
 
 fn get_cookie() -> Result<(), Error> {
-    fs::copy("/home/ed/.mozilla/firefox/igm7ysof.default/cookies.sqlite", "/tmp/cookies.sqlite")?;
-    println!("{}", get_session_cookie("/tmp/cookies.sqlite")?);
-    Ok(())
+    let cookie_store_dir = match env::home_dir() {
+        None => bail!("can't get home directory"),
+        Some(d) => d.join(".mozilla/firefox/igm7ysof.default/cookies.sqlite"),
+    };
+
+    // copy the cookie store to a temporary location, if firefox is open, the
+    // store will be locked
+    let tmp_dir = tempdir()?;
+    let tmp_path = tmp_dir.path().join("cookies.sqlite");
+    fs::copy(&cookie_store_dir, &tmp_path)?;
+
+    let cookie_value = get_session_cookie(&tmp_path)?;
+    set_cookie(&cookie_value)
 }

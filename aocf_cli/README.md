@@ -23,6 +23,11 @@ repository. Data and configuration for aocf is kept in `./.aocf`.
 
 Write out the cookie using provided session cookie string.
 
+### `set-cookie`
+
+Extract your session cookie from the Firefox cookie store. You should have
+previously logged in to Advent of code using Firefox.
+
 ### `checkout`
 
 Move to a given day, and optionally year. May be combined with `--now`.
