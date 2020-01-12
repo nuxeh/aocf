@@ -65,7 +65,7 @@ pub fn find_root() -> Result<PathBuf, Error> {
 
     match conf_dir {
         Some(dir) => Ok(dir.to_path_buf()),
-        None => bail!("no configuration found"),
+        None => bail!("no configuration found, maybe you need to run `aocf init`"),
     }
 }
 
