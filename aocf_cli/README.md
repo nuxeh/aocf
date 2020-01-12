@@ -73,7 +73,7 @@ in the root configuration (`.aocf/config`) as e.g. `pager = "less"`.
 
 * `--force`
 
-This will force retrieval from the AoC site, even if a cache eists already for
+This will force retrieval from the AoC site, even if a cache exists already for
 the current day/problem part.
 
 ### Cache
