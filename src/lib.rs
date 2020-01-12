@@ -1,3 +1,4 @@
+#[macro_use] extern crate diesel;
 #[macro_use] extern crate failure;
 #[macro_use] extern crate serde_derive;
 extern crate serde;
@@ -11,6 +12,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 mod http;
+mod cookie;
 
 #[derive(Hash, PartialEq, Eq, Clone, Copy, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]

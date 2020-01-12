@@ -1,20 +1,35 @@
-use diesel::connection::SimpleConnection;
+mod db_models;
+mod db_schema;
+
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use failure::Error;
 use std::path::Path;
 
+use db_models::*;
+use db_schema::*;
+
 fn connect_sqlite(path: impl AsRef<Path>) -> Result<SqliteConnection, Error> {
-    let connection = SqliteConnection::establish(path.as_ref())?;
+    let path = match path.as_ref().to_str() {
+        Some(p) => p,
+        None => bail!("can't parse path to string"),
+    };
+    let connection = SqliteConnection::establish(path)?;
     Ok(connection)
 }
 
-pub fn get_session_cookie(path: impl AsRef<path>) -> Result<String, Error> {
+pub fn get_session_cookie(path: impl AsRef<Path>) -> Result<String, Error> {
     let connection = connect_sqlite(path)?;
 
-    let result = urls::table
-        .filter(FirefoxCookie::baseDomain.eq("adventofcode.com"))
-        .filter(FirefoxCookie::name.eq("session"))
+    let records = moz_cookies::table
+        .filter(moz_cookies::baseDomain.eq("adventofcode.com"))
+        .filter(moz_cookies::name.eq("session"))
         .limit(1)
-        .load(&connection)?;
+        .load::<FirefoxCookie>(&connection)?;
+
+    if records.is_empty() {
+        bail!("no cookie found in cookie store");
+    } else {
+        Ok(records[1].value.to_owned())
+    }
 }

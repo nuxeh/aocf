@@ -1,5 +1,3 @@
-use crate::db_schema::urls;
-
 /*
 PRAGMA table_info(moz_cookies)
 0|id|INTEGER|0||1
@@ -18,6 +16,7 @@ PRAGMA table_info(moz_cookies)
 13|sameSite|INTEGER|0|0|0
 */
 
+#[allow(non_snake_case)]
 #[derive(Queryable, Debug)]
 pub struct FirefoxCookie {
     pub id: i32,
