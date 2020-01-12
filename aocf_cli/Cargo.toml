@@ -7,14 +7,13 @@ license = "ISC"
 readme = "README.md"
 description = "CLI helper tool for Advent of Code, with a workflow similar to Git"
 repository = "https://github.com/nuxeh/aocf"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+keywords = ["advent", "code", "cli", "tool", "helper"]
 
 [dev-dependencies]
 tempfile = "3.1.0"
 
 [dependencies]
-aocf = {version = "*", path = ".."}
+aocf = {version = "0.1.1", path = ".."}
 chrono = "0.4.10"
 docopt = "1.1.0"
 failure = "0.1.6"
