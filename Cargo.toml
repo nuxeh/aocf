@@ -1,7 +1,7 @@
 [package]
 name = "aocf"
 version = "0.1.0"
-authors = ["Ed Cragg <drq.11235@gmail.com>"]
+authors = ["Ed Cragg <ed@eipi.xyz>"]
 edition = "2018"
 license = "ISC"
 readme = "README.md"
