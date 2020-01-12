@@ -11,13 +11,13 @@ repository = "https://github.com/nuxeh/aocf"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dev-dependencies]
-tempfile = "*"
+tempfile = "3.1.0"
 
 [dependencies]
 aocf = {version = "*", path = ".."}
 chrono = "0.4.10"
 docopt = "1.1.0"
 failure = "0.1.6"
-serde = "1.0.103"
-serde_derive = "1.0.103"
+serde = "1.0.104"
+serde_derive = "1.0.104"
 toml = "0.5.5"
