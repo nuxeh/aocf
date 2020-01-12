@@ -31,10 +31,12 @@ Usage:
 Examples:
     aocf init
     aocf set-cookie <content>
+    aocf get-cookie
     aocf checkout <day> [<year>]
     aocf fetch
-    aocf set [--global] <name> <value>
-    aocf gen-readme
+    aocf brief
+    aocf input
+    aocf submit <solution>
 
 Options:
     -h --help                   Show this help message.
@@ -42,11 +44,17 @@ Options:
     --day=<day>                 Specify challenge day.
     --year=<year>               Specify challenge year.
     --now                       Use current day of the month.
-    --global                    Set variable globally for AoC root.
-    --edit                      Open in editor.
     --view                      Open in pager.
     --force                     Force overwriting the cache.
 ";
+
+/*
+    aocf set [--global] <name> <value>
+    aocf gen-readme
+
+    --global                    Set variable globally for AoC root.
+    --edit                      Open in editor.
+*/
 
 // - https://github.com/rabuf/advent-of-code/blob/master/2019/2019.03.org
 // - tag git log

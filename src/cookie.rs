@@ -28,7 +28,7 @@ pub fn get_session_cookie(path: impl AsRef<Path>) -> Result<String, Error> {
         .load::<FirefoxCookie>(&connection)?;
 
     if records.is_empty() {
-        bail!("no cookie found in cookie store");
+        bail!("no cookie found in the cookie store");
     } else {
         Ok(records[0].value.to_owned())
     }
