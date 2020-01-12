@@ -1,7 +1,7 @@
 # `aocf` - Advent of Code fetch
 
 [![build status](https://api.travis-ci.org/nuxeh/aocf.png?branch=master)](https://travis-ci.org/nuxeh/aocf)
-[![build status](https://img.shields.io/crates/v/aocf)](https://crates.io/crates/aocf)
+[![crates.io](https://img.shields.io/crates/v/aocf)](https://crates.io/crates/aocf)
 
 A crate and CLI helper tool for [Advent of Code](https://adventofcode.com/).
 

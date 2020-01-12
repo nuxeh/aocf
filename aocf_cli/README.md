@@ -1,6 +1,6 @@
 # `aocf_cli` - Advent of Code fetch CLI
 
-[![build status](https://img.shields.io/crates/v/aocf_cli)](https://crates.io/crates/aocf_cli)
+[![crates.io](https://img.shields.io/crates/v/aocf_cli)](https://crates.io/crates/aocf_cli)
 
 A CLI helper tool for [Advent of Code](https://adventofcode.com/).
 
