@@ -1,6 +1,11 @@
 # `aocf` - Advent of Code fetch
 
-[![build status](https://api.travis-ci.org/nuxeh/aocf.png?branch=master)](https://travis-ci.org/nuxeh/aocf)
+[![build](https://github.com/nuxeh/aocf/workflows/build/badge.svg)](https://github.com/nuxeh/aocf/actions?query=branch%3Amaster+event%3Apush+workflow%3Abuild)
+[![test](https://github.com/nuxeh/aocf/workflows/tests/badge.svg)](https://github.com/nuxeh/aocf/actions?query=branch%3Amaster+event%3Apush+workflow%3Atests)
+[![clippy](https://github.com/nuxeh/aocf/workflows/clippy/badge.svg)](https://github.com/nuxeh/aocf/actions?query=branch%3Amaster+event%3Apush+workflow%3Aclippy)
+[![macOS](https://github.com/nuxeh/aocf/workflows/macOS/badge.svg)](https://github.com/nuxeh/aocf/actions?query=branch%3Amaster+event%3Apush+workflow%3AmacOS)
+[![windows](https://github.com/nuxeh/aocf/workflows/windows/badge.svg)](https://github.com/nuxeh/aocf/actions?query=branch%3Amaster+event%3Apush+workflow%3Awindows)
+[![coveralls](https://img.shields.io/coveralls/github/nuxeh/aocf/master)](https://coveralls.io/github/nuxeh/aocf?branch=master)
 [![crates.io](https://img.shields.io/crates/v/aocf)](https://crates.io/crates/aocf)
 
 A crate and CLI helper tool for [Advent of Code](https://adventofcode.com/).

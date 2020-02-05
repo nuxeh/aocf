@@ -1,0 +1,26 @@
+name: windows
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+
+    - name: Build
+      run: cargo build --verbose
+
+    - name: Build tests
+      run: cargo test --verbose --no-run
+
+    - name: Run tests
+      run: cargo test --verbose

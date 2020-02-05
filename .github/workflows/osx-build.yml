@@ -1,0 +1,29 @@
+name: macOS
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+
+    - name: Install dependencies
+      run: brew install sqlite3
+
+    - name: Build
+      run: cargo build --verbose
+
+    - name: Build tests
+      run: cargo test --verbose --no-run
+
+    - name: Run tests
+      run: cargo test --verbose

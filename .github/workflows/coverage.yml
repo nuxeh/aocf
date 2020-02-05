@@ -1,0 +1,42 @@
+name: coverage
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        override: true
+
+    - name: Install dependencies
+      run: sudo apt-get install -y libsqlite3-dev
+
+    - name: Install grcov
+      run: cargo install grcov
+
+    - name: Run grcov
+      env:
+        PROJECT_NAME: "aocf"
+        RUSTFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads"
+        CARGO_INCREMENTAL: 0
+      run: |
+        cargo build --verbose
+        cargo test --verbose
+        zip -0 cov.zip $(find . -name "$PROJECT_NAME*.gc*" -print)
+        grcov cov.zip -s . -t lcov --llvm --ignore-not-existing --ignore "/*" -o lcov.info
+
+    - name: Push grcov results to Coveralls via GitHub Action
+      uses: coverallsapp/github-action@v1.0.1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: "lcov.info"
