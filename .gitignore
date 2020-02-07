@@ -2,3 +2,4 @@
 **/*.rs.bk
 *.sw*
 /aoc_cli/target
+/Cargo.lock
