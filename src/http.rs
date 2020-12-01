@@ -85,8 +85,7 @@ pub fn verify(text: &str) -> bool {
 }
 
 fn get_title(brief: &str) -> Option<String> {
-    let regex = format!("<h2>--- Day .*?: (.*?) ---</h2>");
-    let regex = Regex::new(&regex).unwrap();
+    let regex = Regex::new("<h2>--- Day .*?: (.*?) ---</h2>").unwrap();
     let title = regex.captures(brief)?.get(1)?.as_str();
     Some(title.to_string())
 }
