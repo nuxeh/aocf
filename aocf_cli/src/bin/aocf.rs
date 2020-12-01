@@ -141,6 +141,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
     let conf_hash = conf.calc_hash();
 
+    // Check that the cookie is in place
     let cookie_path = find_root()?.join(".aocf/cookie");
     if !cookie_path.exists() {
         bail!("cookie not found, please run set-cookie");
@@ -149,7 +150,6 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     let mut aoc = Aoc::new()
         .year(year.or_else(|| Some(conf.year)))
         .day(day.or_else(|| Some(conf.day)))
-        .cookie_file(&cookie_path)
         .init()?;
 
     match args.arg_command {

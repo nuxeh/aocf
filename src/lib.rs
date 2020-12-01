@@ -36,6 +36,7 @@ impl fmt::Display for Level {
     }
 }
 
+/// A cache entry for a single day, containing all data related to that day's problem
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Aoc {
     pub year: Option<i32>,
@@ -47,6 +48,7 @@ pub struct Aoc {
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
     cache_path: Option<PathBuf>,
+    #[serde(skip)]
     cookie_path: Option<PathBuf>,
     #[serde(skip)]
     cookie: String,
@@ -91,16 +93,21 @@ impl Aoc {
     }
 
     /// Initialise (finish building)
-    pub fn init(&mut self) -> Result<Self, Error> {
-        if let Some(p) = &self.cookie_path {
-            self.cookie = read_to_string(p)?.trim().to_string()
-        };
+    pub fn init(mut self) -> Result<Self, Error> {
+        // Attempt to load cookie data
+        if self.cookie.is_empty() {
+            if let Some(p) = &self.cookie_path {
+                self.cookie = read_to_string(p)?.trim().to_string()
+            } else if let Ok(p) = self.get_default_cookie_path() {
+                self.cookie = read_to_string(p)?.trim().to_string()
+            };
+        }
 
         if let Ok(mut aoc) = self.load() {
-            aoc.cookie = self.cookie.clone();
+            aoc.cookie = self.cookie;
             Ok(aoc)
         } else {
-            Ok(self.clone())
+            Ok(self)
         }
     }
 
@@ -189,10 +196,23 @@ impl Aoc {
         }
     }
 
+    fn get_default_cookie_path(&self) -> Result<PathBuf, Error> {
+        let p = PathBuf::from("./.aocf/cookie");
+        if let Ok(r) = find_root() {
+            Ok(PathBuf::from(r.join(p)))
+        } else {
+            Ok(p)
+        }
+    }
+
     fn get_default_cache_path(&self) -> Result<PathBuf, Error> {
         if let (Some(y), Some(d)) = (self.year, self.day) {
-            let p = format!("./.aocf/cache/aoc{}_{}.json", y, d);
-            Ok(PathBuf::from(&p))
+            let p = PathBuf::from(&format!("./.aocf/cache/aoc{}_{}.json", y, d));
+            if let Ok(r) = find_root() {
+                Ok(PathBuf::from(r.join(p)))
+            } else {
+                Ok(p)
+            }
         } else {
             bail!("day or year not set");
         }
