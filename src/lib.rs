@@ -139,6 +139,7 @@ impl Aoc {
         if http::verify(&resp) {
             self.add_star();
             self.advance().unwrap_or(());
+            self.solution.insert(self.level, solution.to_string());
         }
         self.write()?;
         Ok(resp)
