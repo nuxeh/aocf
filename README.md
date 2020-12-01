@@ -16,8 +16,6 @@ To use directly within Rust, he crate may be used as follows, for getting input
 data for a task as a string:
 
 ```rust
-extern crate aocf;
-
 use aocf::Aoc;
 
 fn main() {
