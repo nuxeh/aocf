@@ -34,7 +34,7 @@ fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
 
 pub fn get_brief(aoc: &Aoc) -> Result<(String, String), Error> {
     let brief = get_content(aoc, "")?;
-    let title = get_title(&brief).unwrap_or(String::new());
+    let title = get_title(&brief).unwrap_or_default();
     let brief = get_html_section(&brief, "main").unwrap_or("".to_string());
     let brief = parse_html(&brief);
     let brief = brief.trim().to_string();
