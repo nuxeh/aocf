@@ -1,7 +1,6 @@
 /*
 PRAGMA table_info(moz_cookies)
 0|id|INTEGER|0||1
-1|baseDomain|TEXT|0||0
 2|originAttributes|TEXT|1|''|0
 3|name|TEXT|0||0
 4|value|TEXT|0||0
@@ -20,7 +19,6 @@ PRAGMA table_info(moz_cookies)
 #[derive(Queryable, Debug)]
 pub struct FirefoxCookie {
     pub id: i32,
-    pub baseDomain: String,
     pub originAttributes: String,
     pub name: String,
     pub value: String,

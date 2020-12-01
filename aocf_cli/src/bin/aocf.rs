@@ -302,6 +302,7 @@ fn get_cookie() -> Result<(), Error> {
     let tmp_dir = tempdir()?;
     let tmp_path = tmp_dir.path().join("cookies.sqlite");
     if let Some(Ok(path)) = cookie_store_dir {
+        eprintln!("found cookie store: {}", path.display());
         fs::copy(&path, &tmp_path)?;
     } else {
         bail!("couldn't get cookie store path");

@@ -1,7 +1,6 @@
 table! {
     moz_cookies (id) {
         id -> Integer,
-        baseDomain -> Text,
         originAttributes -> Text,
         name -> Text,
         value -> Text,

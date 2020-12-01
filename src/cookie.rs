@@ -22,7 +22,7 @@ pub fn get_session_cookie(path: impl AsRef<Path>) -> Result<String, Error> {
     let connection = connect_sqlite(path)?;
 
     let records = moz_cookies::table
-        .filter(moz_cookies::baseDomain.eq("adventofcode.com"))
+        .filter(moz_cookies::host.eq(".adventofcode.com"))
         .filter(moz_cookies::name.eq("session"))
         .limit(1)
         .load::<FirefoxCookie>(&connection)?;
