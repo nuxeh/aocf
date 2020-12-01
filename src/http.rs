@@ -35,7 +35,7 @@ fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
 pub fn get_brief(aoc: &Aoc) -> Result<(String, String), Error> {
     let brief = get_content(aoc, "")?;
     let title = get_title(&brief).unwrap_or_default();
-    let brief = get_html_section(&brief, "main").unwrap_or("".to_string());
+    let brief = get_html_section(&brief, "main").unwrap_or_else(|| "".to_string());
     let brief = parse_html(&brief);
     let brief = brief.trim().to_string();
     Ok((title, brief))
@@ -67,7 +67,7 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
         .error_for_status()?
         .text()?;
 
-    let resp = get_html_section(&resp, "main").unwrap_or("".to_string());
+    let resp = get_html_section(&resp, "main").unwrap_or_else(|| "".to_string());
     let resp = parse_html(&resp);
     let resp = resp.trim().to_string();
     Ok(resp)
