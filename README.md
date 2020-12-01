@@ -47,6 +47,7 @@ $ aocf fetch
 $ aocf brief
 $ aocf input
 $ aocf status
+$ aocf submit <answer>
 ```
 
 More details can be found in in the CLI's [readme](./aocf_cli/README.md).
