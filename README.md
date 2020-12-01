@@ -20,15 +20,14 @@ use aocf::Aoc;
 
 fn main() {
     let mut aoc = Aoc::new()
-        .year(Some(2019))
+        .year(Some(2020))
         .day(Some(1))
-        .cookie_file("./cookie")
         .init()
         .unwrap();
 
-    let input = aoc.get_input();
+    let input = aoc.get_input(false);
 
-    println!("{}", input);
+    println!("{:?}", input);
 }
 ```
 

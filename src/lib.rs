@@ -119,6 +119,7 @@ impl Aoc {
             self.title = Some(brief.0);
             self.brief.insert(self.level, brief.1);
         };
+        self.write()?;
         Ok(self.brief.get(&self.level).unwrap().to_string())
     }
 
@@ -128,6 +129,7 @@ impl Aoc {
             let input = http::get_input(self)?;
             self.input = Some(input);
         }
+        self.write()?;
         Ok(self.input.clone().unwrap())
     }
 
@@ -138,6 +140,7 @@ impl Aoc {
             self.add_star();
             self.advance().unwrap_or(());
         }
+        self.write()?;
         Ok(resp)
     }
 
