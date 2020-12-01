@@ -42,6 +42,7 @@ $ aocf init
 $ aocf get-cookie # get cookie from firefox cookie store
 $ aocf set-cookie <your-cookie-text>
 $ aocf checkout 1 2019
+$ aocf checkout --now
 $ aocf fetch
 $ aocf brief
 $ aocf input
