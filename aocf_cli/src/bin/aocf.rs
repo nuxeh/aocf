@@ -110,8 +110,8 @@ fn get_day_year(args: &Cliargs) -> (Option<u32>, Option<i32>) {
         (None, None)
     };
 
-    day = day.or_else(|| args.flag_day);
-    year = year.or_else(|| args.flag_year);
+    day = day.or(args.flag_day);
+    year = year.or(args.flag_year);
 
     (day, year)
 }
@@ -141,8 +141,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     }
 
     let mut aoc = Aoc::new()
-        .year(year.or_else(|| Some(conf.year)))
-        .day(day.or_else(|| Some(conf.day)))
+        .year(year.or(Some(conf.year)))
+        .day(day.or(Some(conf.day)))
         .init()?;
 
     match args.arg_command {
