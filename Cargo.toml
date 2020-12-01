@@ -22,3 +22,4 @@ libsqlite3-sys = { version = "0.16.0", features = ["bundled"] }
 serde = "1.0.104"
 serde_derive = "1.0.104"
 serde_json = "1.0.44"
+tempfile = "3.1.0"

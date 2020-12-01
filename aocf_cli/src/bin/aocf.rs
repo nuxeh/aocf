@@ -8,9 +8,11 @@ extern crate docopt;
 extern crate tempfile;
 extern crate toml;
 
-use aocf::Aoc;
-use aocf::cookie::get_session_cookie;
-use aocf_cli::conf;
+use aocf::{
+    Aoc,
+    cookie::get_session_cookie,
+    find_root,
+};
 use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
 use dirs::home_dir;
@@ -98,12 +100,12 @@ fn main() {
 }
 
 fn find_config() -> Result<Conf, Error> {
-    let conf_path = conf::find_root()?.join(".aocf/config");
+    let conf_path = find_root()?.join(".aocf/config");
     Ok(Conf::load(&conf_path)?)
 }
 
 fn write_conf(conf: &Conf) -> Result<(), Error> {
-    let conf_path = conf::find_root()?.join(".aocf/config");
+    let conf_path = find_root()?.join(".aocf/config");
     Ok(conf.write(&conf_path)?)
 }
 
@@ -139,7 +141,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
     let conf_hash = conf.calc_hash();
 
-    let cookie_path = conf::find_root()?.join(".aocf/cookie");
+    let cookie_path = find_root()?.join(".aocf/cookie");
     if !cookie_path.exists() {
         bail!("cookie not found, please run set-cookie");
     }
@@ -276,7 +278,7 @@ fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error
 }
 
 fn set_cookie(cookie: &str) -> Result<(), Error> {
-    let cookie_path = conf::find_root()?.join(".aocf/cookie");
+    let cookie_path = find_root()?.join(".aocf/cookie");
     let mut file = fs::File::create(cookie_path)?;
     Ok(file.write_all(cookie.as_bytes())?)
 }
