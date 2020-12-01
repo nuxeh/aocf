@@ -1,19 +1,19 @@
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate failure;
-#[macro_use] extern crate serde_derive;
 
 use failure::Error;
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeMap};
 use std::fmt;
 use std::fs::{File, read_to_string, create_dir_all};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::env::current_dir;
+use serde::{Deserialize, Serialize, Serializer};
 
 mod http;
 pub mod cookie;
 
-#[derive(Hash, PartialEq, Eq, Clone, Copy, Serialize, Deserialize)]
+#[derive(Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Level {
     First,
@@ -45,7 +45,9 @@ pub struct Aoc {
     pub title: Option<String>,
     pub stars: Option<u8>,
     input: Option<String>,
+    #[serde(serialize_with = "ordered_map")]
     brief: HashMap<Level, String>,
+    #[serde(serialize_with = "ordered_map")]
     solution: HashMap<Level, String>,
     #[serde(skip)]
     cache_path: Option<PathBuf>,
@@ -227,6 +229,15 @@ impl Aoc {
     pub fn get_time_until_release() {
 
     }
+}
+
+/// Get an ordered hashmap representation when serialising
+fn ordered_map<S>(value: &HashMap<Level, String>, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let ordered: BTreeMap<_, _> = value.iter().collect();
+    ordered.serialize(serializer)
 }
 
 fn ensure_parent_dir(file: impl AsRef<Path>) -> Result<(), Error> {
