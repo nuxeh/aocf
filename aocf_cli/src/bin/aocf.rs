@@ -286,7 +286,7 @@ fn set_cookie(cookie: &str) -> Result<(), Error> {
     let gitignore_path = find_root()?.join(".aocf/.gitignore");
     if !gitignore_path.exists() {
         let mut gitignore = fs::File::create(gitignore_path)?;
-        gitignore.write_all(b"cookie")?;
+        gitignore.write_all(b"cookie\n")?;
     }
 
     Ok(file.write_all(cookie.as_bytes())?)
