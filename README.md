@@ -39,6 +39,7 @@ The CLI has a workflow similar to Git, e.g.
 
 ```
 $ aocf init
+$ aocf get-cookie # get cookie from firefox cookie store
 $ aocf set-cookie <your-cookie-text>
 $ aocf checkout 1 2019
 $ aocf fetch
