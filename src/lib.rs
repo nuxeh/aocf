@@ -206,7 +206,7 @@ impl Aoc {
     fn get_default_cookie_path(&self) -> Result<PathBuf, Error> {
         let p = PathBuf::from("./.aocf/cookie");
         if let Ok(r) = find_root() {
-            Ok(PathBuf::from(r.join(p)))
+            Ok(r.join(p))
         } else {
             Ok(p)
         }
@@ -216,7 +216,7 @@ impl Aoc {
         if let (Some(y), Some(d)) = (self.year, self.day) {
             let p = PathBuf::from(&format!("./.aocf/cache/aoc{}_{}.json", y, d));
             if let Ok(r) = find_root() {
-                Ok(PathBuf::from(r.join(p)))
+                Ok(r.join(p))
             } else {
                 Ok(p)
             }
