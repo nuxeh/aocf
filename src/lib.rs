@@ -47,6 +47,7 @@ pub struct Aoc {
     input: Option<String>,
     brief: HashMap<Level, String>,
     solution: HashMap<Level, String>,
+    #[serde(skip)]
     cache_path: Option<PathBuf>,
     #[serde(skip)]
     cookie_path: Option<PathBuf>,
@@ -60,25 +61,25 @@ impl Aoc {
     }
 
     /// Set the year
-    pub fn year(&mut self, year: Option<i32>) -> &mut Self {
+    pub fn year(mut self, year: Option<i32>) -> Self {
         self.year = year;
         self
     }
 
     /// Set the day
-    pub fn day(&mut self, day: Option<u32>) -> &mut Self {
+    pub fn day(mut self, day: Option<u32>) -> Self {
         self.day = day;
         self
     }
 
     /// Set cookie string
-    pub fn cookie(&mut self, cookie: &str) -> &mut Self {
+    pub fn cookie(mut self, cookie: &str) -> Self {
         self.cookie = cookie.to_string();
         self
     }
 
     /// Set cookie file
-    pub fn cookie_file(&mut self, path: impl AsRef<Path>) -> &mut Self {
+    pub fn cookie_file(mut self, path: impl AsRef<Path>) -> Self {
         self.cookie_path = Some(path.as_ref().to_path_buf());
         self
     }
@@ -87,7 +88,7 @@ impl Aoc {
 //    pub fn cache<P>(&mut self, path: P) -> &mut Self
 //        where P: AsRef<Path> + std::clone::Clone,
 //    {
-    pub fn cache<P>(&mut self, path: Option<&Path>) -> &mut Self {
+    pub fn cache<P>(mut self, path: Option<&Path>) -> Self {
         self.cache_path = path.as_ref().map(PathBuf::from);
         self
     }

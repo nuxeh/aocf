@@ -3,7 +3,7 @@ use std::collections::hash_map::DefaultHasher;
 use std::fs::{File, read_to_string};
 use std::hash::{Hash, Hasher};
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 #[derive(Serialize, Deserialize, Debug, Hash)]
 enum ExecMode {
