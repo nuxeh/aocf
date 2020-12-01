@@ -56,6 +56,16 @@ CLI and the crate can also be freely used together, so if there is a root
 configuration created by the CLI, the crate will find and use this, or else
 store cached data in the current directory.
 
-How to get your [session cookie](./cookie.md). This can be as easy as logging
+[How to get your session cookie](./cookie.md). This can be as easy as logging
 in to AoC with Firefox, and having the CLI extract the authentication token
 automatically.
+
+## Installation
+
+ - `cargo install aocf_cli`.
+ - `cargo install --path .` from inside a cloned repository.
+ - `cargo deb --install` from inside a cloned repository.
+
+## Dependencies
+
+Depends on development packages for `sqlite` and `openssl`.
