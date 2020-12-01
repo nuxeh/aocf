@@ -1,6 +1,3 @@
-#[macro_use] extern crate failure;
-#[macro_use] extern crate serde_derive;
-
 use aocf::{
     Aoc,
     cookie::get_session_cookie,
@@ -10,13 +7,14 @@ use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
 use dirs::home_dir;
 use docopt::Docopt;
-use failure::Error;
 use std::env;
 use std::fs;
 use std::io::Write;
 use std::process::{self, Stdio};
 use tempfile::tempdir;
 use glob::glob;
+use serde::Deserialize;
+use failure::{Error, bail, format_err};
 
 include!(concat!(env!("OUT_DIR"), "/version.rs"));
 

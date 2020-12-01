@@ -1,7 +1,5 @@
 #[macro_use] extern crate diesel;
-#[macro_use] extern crate failure;
 
-use failure::Error;
 use std::collections::{HashMap, BTreeMap};
 use std::fmt;
 use std::fs::{File, read_to_string, create_dir_all};
@@ -9,6 +7,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::env::current_dir;
 use serde::{Deserialize, Serialize, Serializer};
+use failure::{Error, bail};
 
 mod http;
 pub mod cookie;

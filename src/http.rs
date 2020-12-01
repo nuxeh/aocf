@@ -4,7 +4,7 @@ extern crate html2md;
 
 use crate::{Aoc, Level};
 use html2md::parse_html;
-use failure::Error;
+use failure::{Error, bail};
 use regex::Regex;
 use reqwest::blocking::Client;
 use reqwest::header;

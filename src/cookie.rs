@@ -3,7 +3,7 @@ mod db_schema;
 
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
-use failure::Error;
+use failure::{Error, bail};
 use std::path::Path;
 
 use db_models::*;
