@@ -17,7 +17,7 @@ checksum = "7825f6833612eb2414095684fcf6c635becf3ce97fe48cf6421321e93bfbd53c"
 
 [[package]]
 name = "aocf"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "diesel",
  "failure",
@@ -28,11 +28,12 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
+ "tempfile",
 ]
 
 [[package]]
 name = "aocf_cli"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "aocf",
  "chrono",
