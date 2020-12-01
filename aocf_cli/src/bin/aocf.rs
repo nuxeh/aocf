@@ -144,7 +144,7 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     // Check that the cookie is in place
     let cookie_path = find_root()?.join(".aocf/cookie");
     if !cookie_path.exists() {
-        bail!("cookie not found, please run set-cookie");
+        bail!("cookie not found, please run set-cookie or get-cookie");
     }
 
     let mut aoc = Aoc::new()
@@ -280,11 +280,19 @@ fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error
 fn set_cookie(cookie: &str) -> Result<(), Error> {
     let cookie_path = find_root()?.join(".aocf/cookie");
     let mut file = fs::File::create(cookie_path)?;
+
+    // write out a .gitignore to avoid committing the cookie data (which
+    // would be very insecure!)
+    let gitignore_path = find_root()?.join(".aocf/.gitignore");
+    if !gitignore_path.exists() {
+        let mut gitignore = fs::File::create(gitignore_path)?;
+        gitignore.write_all(b"cookie")?;
+    }
+
     Ok(file.write_all(cookie.as_bytes())?)
 }
 
 fn get_cookie() -> Result<(), Error> {
-
     let cookie_store_dir = match home_dir() {
         None => bail!("can't get home directory"),
         Some(d) => {
@@ -309,7 +317,6 @@ fn get_cookie() -> Result<(), Error> {
     } else {
         bail!("couldn't get cookie store path");
     }
-
 
     let cookie_value = get_session_cookie(&tmp_path)?;
     set_cookie(&cookie_value)
