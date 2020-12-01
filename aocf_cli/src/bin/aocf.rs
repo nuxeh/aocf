@@ -21,6 +21,7 @@ use std::fs;
 use std::io::Write;
 use std::process::{self, Stdio};
 use tempfile::tempdir;
+use glob::glob;
 
 const USAGE: &str = "
 Advent of Code Swiss army knife.
@@ -281,16 +282,31 @@ fn set_cookie(cookie: &str) -> Result<(), Error> {
 }
 
 fn get_cookie() -> Result<(), Error> {
+
     let cookie_store_dir = match home_dir() {
         None => bail!("can't get home directory"),
-        Some(d) => d.join(".mozilla/firefox/igm7ysof.default/cookies.sqlite"),
+        Some(d) => {
+            if let Some(p) = d.join(".mozilla/firefox/*.default/cookies.sqlite").to_str() {
+                match glob(p) {
+                    Ok(mut path) => path.next(),
+                    Err(e) => bail!("{:?}", e),
+                }
+            } else {
+                bail!("can't get cookie store path");
+            }
+        }
     };
 
     // copy the cookie store to a temporary location, if firefox is open, the
     // store will be locked
     let tmp_dir = tempdir()?;
     let tmp_path = tmp_dir.path().join("cookies.sqlite");
-    fs::copy(&cookie_store_dir, &tmp_path)?;
+    if let Some(Ok(path)) = cookie_store_dir {
+        fs::copy(&path, &tmp_path)?;
+    } else {
+        bail!("couldn't get cookie store path");
+    }
+
 
     let cookie_value = get_session_cookie(&tmp_path)?;
     set_cookie(&cookie_value)
