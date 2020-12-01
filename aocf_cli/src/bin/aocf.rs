@@ -1,12 +1,5 @@
-//#[macro_use] extern crate slog;
 #[macro_use] extern crate failure;
 #[macro_use] extern crate serde_derive;
-extern crate aocf;
-extern crate chrono;
-extern crate dirs;
-extern crate docopt;
-extern crate tempfile;
-extern crate toml;
 
 use aocf::{
     Aoc,
@@ -24,6 +17,8 @@ use std::io::Write;
 use std::process::{self, Stdio};
 use tempfile::tempdir;
 use glob::glob;
+
+include!(concat!(env!("OUT_DIR"), "/version.rs"));
 
 const USAGE: &str = "
 Advent of Code Swiss army knife.
@@ -91,7 +86,7 @@ enum Command {
 
 fn main() {
     let args: Cliargs = Docopt::new(USAGE)
-        .and_then(|d| d.version(Some("0.1.0".to_string())).deserialize())
+        .and_then(|d| d.version(Some(PKG_VERSION.to_string())).deserialize())
         .unwrap_or_else(|e| e.exit());
 
     run(&args).unwrap_or_else(|err| {
