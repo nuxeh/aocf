@@ -139,9 +139,9 @@ impl Aoc {
     pub fn submit(&mut self, solution: &str) -> Result<String, Error> {
         let resp = http::submit(self, solution)?;
         if http::verify(&resp) {
+            self.solution.insert(self.level, solution.to_string());
             self.add_star();
             self.advance().unwrap_or(());
-            self.solution.insert(self.level, solution.to_string());
         }
         self.write()?;
         Ok(resp)
