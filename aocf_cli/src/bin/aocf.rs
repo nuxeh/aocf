@@ -3,6 +3,9 @@ use aocf::{
     cookie::get_session_cookie,
     find_root,
 };
+use aocf_cli::{
+    pretty::make_pretty,
+};
 use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
 use dirs::home_dir;
@@ -35,13 +38,14 @@ Examples:
     aocf submit <solution>
 
 Options:
-    -h --help                   Show this help message.
-    --version                   Print version.
-    --day=<day>                 Specify challenge day.
-    --year=<year>               Specify challenge year.
-    --now                       Use current day of the month.
-    --view                      Open in pager.
-    --force                     Force overwriting the cache.
+    -h --help         Show this help message.
+    --version         Print version.
+    -d --day=<day>    Specify challenge day.
+    -y --year=<year>  Specify challenge year.
+    -n --now          Use current day of the month.
+    -v --view         Open in pager.
+    -p --pretty       Pretty print brief output.
+    --force           Force overwriting the cache.
 ";
 
 /*
@@ -64,6 +68,7 @@ struct Cliargs {
     flag_now: bool,
     flag_force: bool,
     flag_view: bool,
+    flag_pretty: bool,
 }
 
 #[derive(Deserialize, PartialEq, Debug)]
@@ -174,7 +179,9 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 }
 
 fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
-    if args.flag_view {
+    if args.flag_pretty {
+        make_pretty(text)?;
+    } else if args.flag_view {
         pager(conf, text)?;
     } else {
         print!("{}", text);
