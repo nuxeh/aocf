@@ -27,7 +27,9 @@ fn main() {
 
     let input = aoc.get_input(false);
 
-    println!("{:?}", input);
+    if let Ok(i) = input {
+        println!("{}", i);
+    }
 }
 ```
 
