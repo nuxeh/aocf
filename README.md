@@ -45,7 +45,7 @@ $ aocf set-cookie <your-cookie-text>
 $ aocf checkout 1 2019
 $ aocf checkout --now
 $ aocf fetch
-$ aocf brief
+$ aocf brief --pretty
 $ aocf input
 $ aocf status
 $ aocf submit <answer>
