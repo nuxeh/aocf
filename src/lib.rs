@@ -285,8 +285,8 @@ mod tests {
         assert!(find_root().is_ok());
         env::set_current_dir(tmp_sub).unwrap();
         if cfg!(macos) {
-            let left: PathBuf = find_root().unwrap().iter().skip(4).collect();
-            let right: PathBuf = tmp_path.iter().skip(3).collect();
+            let left: PathBuf = find_root().unwrap().components().skip(5).collect();
+            let right: PathBuf = tmp_path.components().skip(4).collect();
             assert_eq!(left, right);
         } else {
             assert_eq!(find_root().unwrap(), tmp_path);
