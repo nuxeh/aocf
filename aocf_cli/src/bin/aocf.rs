@@ -193,7 +193,6 @@ fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
             .replace(": \\*\\*", ": **`**`**")
             .replace(": \\*", ": **`*`**")
             .replace("\\---", "---");
-        println!("{}", display_text);
         make_pretty(&display_text)?;
     } else if args.flag_view {
         pager(conf, text)?;
