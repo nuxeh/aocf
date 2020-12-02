@@ -140,6 +140,7 @@ impl Aoc {
         let resp = http::submit(self, solution)?;
         if http::verify(&resp) {
             self.solution.insert(self.level, solution.to_string());
+            self.get_brief(true).ok(); // Update brief (force) to update stars
             self.add_star();
             self.advance().unwrap_or(());
         }
