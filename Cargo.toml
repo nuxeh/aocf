@@ -9,9 +9,6 @@ description = "A crate and CLI helper tool for Advent of Code"
 repository = "https://github.com/nuxeh/aocf"
 keywords = ["advent", "code", "cli", "tool", "helper"]
 
-[badges]
-travis-ci = { repository = "nuxeh/aocf", branch = "master" }
-
 [dependencies]
 diesel = { version = "1.4.3", features = ["sqlite"] }
 failure = "0.1.6"
