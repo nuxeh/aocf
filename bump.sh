@@ -15,4 +15,6 @@ cargo build
 cd aocf_cli
 cargo build
 
-git ct Cargo.toml aocf_cli/Cargo.* -m "Bump $FROM → $TO"
+cd ..
+git ct Cargo.toml aocf_cli/Cargo.toml aocf_cli/Cargo.lock -m "Bump v$FROM → v$TO"
+git tag "v$TO"
