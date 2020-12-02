@@ -18,6 +18,7 @@ use tempfile::tempdir;
 use glob::glob;
 use serde::Deserialize;
 use failure::{Error, bail, format_err};
+use regex::Regex;
 
 include!(concat!(env!("OUT_DIR"), "/version.rs"));
 
@@ -180,7 +181,17 @@ fn run(args: &Cliargs) -> Result<(), Error> {
 
 fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
     if args.flag_pretty {
-        make_pretty(text)?;
+        let re = Regex::new(r"`\*(?P<content>.+?)\*`").unwrap();
+        let display_text: String = text.lines()
+            .skip(2)
+            .map(|l| format!("{}\n", l))
+            .map(|l| re.replace_all(&l, "*`$content`*").to_string())
+            .collect::<String>()
+            .replace(": \\*\\*", ": **`**`**")
+            .replace(": \\*", ": **`*`**")
+            .replace("\\---", "---");
+        println!("{}", display_text);
+        make_pretty(&display_text)?;
     } else if args.flag_view {
         pager(conf, text)?;
     } else {

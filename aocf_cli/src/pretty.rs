@@ -14,12 +14,15 @@ use crossterm::{
         EnterAlternateScreen,
         LeaveAlternateScreen,
     },
-    style::Color::*,
+    style::{
+        Color::*,
+        Attribute::*,
+    },
 };
 use std::io::{stderr, Write};
 use failure::Error;
 use termimad::{
-    MadSkin, MadView, Alignment, Area
+    MadSkin, MadView, Alignment, Area, CompoundStyle,
 };
 
 fn view_area() -> Area {
@@ -66,9 +69,12 @@ fn make_skin() -> MadSkin {
     skin.table.align = Alignment::Center;
     skin.set_headers_fg(AnsiValue(178));
     skin.bold.set_fg(Yellow);
-    skin.italic.set_fg(Magenta);
+    skin.italic.overwrite_with(&CompoundStyle::with_attr(Bold));
+    skin.italic.set_fg(White);
     skin.scrollbar.thumb.set_fg(AnsiValue(178));
     skin.code_block.align = Alignment::Center;
+    skin.set_global_bg(Rgb{ r: 0x0f, g: 0x0f, b: 0x23 });
+    //skin.inline_code.set_bg(Rgb{ r: 0x10, g: 0x10, b: 0x1a });
     skin
 }
 
