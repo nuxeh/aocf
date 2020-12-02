@@ -1,6 +1,6 @@
 [package]
 name = "aocf_cli"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Ed Cragg <ed@eipi.xyz>"]
 edition = "2018"
 license = "ISC"
@@ -16,7 +16,7 @@ travis-ci = { repository = "nuxeh/aocf", branch = "master" }
 tempfile = "3.1.0"
 
 [dependencies]
-aocf = {version = "0.1.1", path = ".."}
+aocf = {version = "*", path = ".."}
 chrono = "0.4.10"
 docopt = "1.1.0"
 dirs = "2.0.2"
