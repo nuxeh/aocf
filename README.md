@@ -14,7 +14,7 @@ A crate and CLI helper tool for [Advent of Code](https://adventofcode.com/).
 
 Written in Rust, but the CLI should be useful for development in any language.
 
-To use directly within Rust, he crate may be used as follows, for getting input
+To use directly within Rust, the crate may be used as follows, for getting input
 data for a task as a string:
 
 ```rust
