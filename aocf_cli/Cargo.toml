@@ -9,6 +9,9 @@ description = "CLI helper tool for Advent of Code, with a workflow similar to Gi
 repository = "https://github.com/nuxeh/aocf"
 keywords = ["advent", "code", "cli", "tool", "helper"]
 
+[[bin]]
+name = "aocf"
+
 [badges]
 travis-ci = { repository = "nuxeh/aocf", branch = "master" }
 
@@ -29,3 +32,8 @@ glob = "0.3.0"
 termimad = "0.9.1"
 crossterm = "0.17.7"
 regex = "1.4.2"
+
+[package.metadata.deb]
+extended-description = """\
+Advent of Code fetch CLI tool modelled after Git.
+"""
