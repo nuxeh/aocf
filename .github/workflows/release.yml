@@ -37,14 +37,14 @@ jobs:
           cargo build --verbose --release
 
       - name: Build and test tool
-        working_directory: aocf_cli
+        working_directory: ./aocf_cli
         run: |
           cargo test --verbose
           cargo clippy --verbose --all-features -- -D warnings
           cargo build --verbose --release
 
       - name: Build Debian package for tool
-        working_directory: aocf_cli
+        working_directory: ./aocf_cli
         run: |
           cargo install cargo-deb
           cargo deb
@@ -61,7 +61,7 @@ jobs:
           prerelease: false
 
       - name: Upload assets to Github
-        working_directory: aocf_cli
+        working_directory: ./aocf_cli
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
           cargo publish
 
       - name: Publish tool to crates.io
-        working_directory: aocf_cli
+        working_directory: ./aocf_cli
         env:
           CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
         run: |
