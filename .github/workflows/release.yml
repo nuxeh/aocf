@@ -5,7 +5,74 @@ on:
     - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
-  release:
+  release_cli:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aocf_cli
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsqlite3-dev
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: clippy
+          override: true
+
+      - name: Build and test tool
+        run: |
+          cargo test --verbose
+          cargo clippy --verbose --all-features -- -D warnings
+          cargo build --verbose --release
+
+      - name: Build Debian package for tool
+        run: |
+          cargo install cargo-deb
+          cargo deb
+
+      - name: Create Github release
+        id: make_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - name: Upload assets to Github
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.make_release.outputs.upload_url }}
+          asset_content_type: application/vnd.debian.binary-package
+          asset_path: target/debian/aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+          asset_name: aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+
+      - name: Publish tool to crates.io
+        env:
+          CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+        run: |
+          cargo login ${CRATES_IO_TOKEN}
+          cargo publish
+
+  release_lib:
     runs-on: ubuntu-latest
     steps:
 
@@ -36,50 +103,7 @@ jobs:
           cargo clippy --verbose --all-features -- -D warnings
           cargo build --verbose --release
 
-      - name: Build and test tool
-        working_directory: ./aocf_cli
-        run: |
-          cargo test --verbose
-          cargo clippy --verbose --all-features -- -D warnings
-          cargo build --verbose --release
-
-      - name: Build Debian package for tool
-        working_directory: ./aocf_cli
-        run: |
-          cargo install cargo-deb
-          cargo deb
-
-      - name: Create Github release
-        id: make_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: true
-          prerelease: false
-
-      - name: Upload assets to Github
-        working_directory: ./aocf_cli
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.make_release.outputs.upload_url }}
-          asset_content_type: application/vnd.debian.binary-package
-          asset_path: target/debian/aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
-          asset_name: aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
-
       - name: Publish lib to crates.io
-        env:
-          CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
-        run: |
-          cargo login ${CRATES_IO_TOKEN}
-          cargo publish
-
-      - name: Publish tool to crates.io
-        working_directory: ./aocf_cli
         env:
           CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
         run: |
