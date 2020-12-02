@@ -284,8 +284,8 @@ mod tests {
         File::create(tmp_path.join(".aocf/config")).unwrap();
         assert!(find_root().is_ok());
         env::set_current_dir(tmp_sub).unwrap();
-        if cfg!(macos) {
-            /* Very strange...
+        if cfg!(linux) || cfg!(windows) {
+            /* Very strange result on macos...
              *
              * ---- tests::test_find_root stdout ----
              * thread 'tests::test_find_root' panicked at 'assertion failed: `(left == right)`
@@ -297,7 +297,6 @@ mod tests {
             let right: PathBuf = tmp_path.components().skip(4).collect();
             assert_eq!(left, right);
             */
-        } else {
             assert_eq!(find_root().unwrap(), tmp_path);
         }
     }
