@@ -73,6 +73,7 @@ fn make_skin() -> MadSkin {
     skin.italic.set_fg(White);
     skin.scrollbar.thumb.set_fg(AnsiValue(178));
     skin.code_block.align = Alignment::Center;
+    skin.bullet.set_bg(Rgb{ r: 0x0f, g: 0x0f, b: 0x23 });
     skin.set_global_bg(Rgb{ r: 0x0f, g: 0x0f, b: 0x23 });
     //skin.inline_code.set_bg(Rgb{ r: 0x10, g: 0x10, b: 0x1a });
     skin
