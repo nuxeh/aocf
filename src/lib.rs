@@ -284,6 +284,12 @@ mod tests {
         File::create(tmp_path.join(".aocf/config")).unwrap();
         assert!(find_root().is_ok());
         env::set_current_dir(tmp_sub).unwrap();
-        assert_eq!(find_root().unwrap(), tmp_path);
+        if cfg!(macos) {
+            let left: PathBuf = find_root().unwrap().iter().skip(4).collect();
+            let right: PathBuf = tmp_path.iter().skip(3).collect();
+            assert_eq!(left, right);
+        } else {
+            assert_eq!(find_root().unwrap(), tmp_path);
+        }
     }
 }
