@@ -1,17 +1,14 @@
+name: release
 on:
   push:
     tags:
     - 'v[0-9]+.[0-9]+.[0-9]+'
 
-name: release
-
 jobs:
-  build:
-    name: release
-
+  release:
     runs-on: ubuntu-latest
-
     steps:
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -22,15 +19,32 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
 
       - name: Install dependencies
-        run: sudo apt-get install -y libsqlite3-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsqlite3-dev
 
-      - name: Build and test
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: clippy
+          override: true
+
+      - name: Build and test lib
         run: |
           cargo test --verbose
           cargo clippy --verbose --all-features -- -D warnings
           cargo build --verbose --release
 
-      - name: Build Debian package
+      - name: Build and test tool
+        working_directory: aocf_cli
+        run: |
+          cargo test --verbose
+          cargo clippy --verbose --all-features -- -D warnings
+          cargo build --verbose --release
+
+      - name: Build Debian package for tool
+        working_directory: aocf_cli
         run: |
           cargo install cargo-deb
           cargo deb
@@ -47,17 +61,25 @@ jobs:
           prerelease: false
 
       - name: Upload assets to Github
+        working_directory: aocf_cli
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PROJECT_NAME: aocf
         with:
           upload_url: ${{ steps.make_release.outputs.upload_url }}
           asset_content_type: application/vnd.debian.binary-package
-          asset_path: target/debian/${PROJECT_NAME}_${{ steps.get_version.outputs.VERSION }}_amd64.deb
-          asset_name: ${PROJECT_NAME}_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+          asset_path: target/debian/aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+          asset_name: aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
 
-      - name: Publish to crates.io
+      - name: Publish lib to crates.io
+        env:
+          CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+        run: |
+          cargo login ${CRATES_IO_TOKEN}
+          cargo publish
+
+      - name: Publish tool to crates.io
+        working_directory: aocf_cli
         env:
           CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
         run: |
