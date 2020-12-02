@@ -73,4 +73,4 @@ automatically.
 
 ## Dependencies
 
-Depends on development packages for `sqlite` and `openssl`.
+Depends on development packages for `openssl`, `sqlite` dependencies are bundled.
