@@ -25,6 +25,7 @@ fn main() {
         .init()
         .unwrap();
 
+    // Get input data (don't force)
     let input = aoc.get_input(false);
 
     if let Ok(i) = input {
