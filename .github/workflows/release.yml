@@ -6,6 +6,7 @@ on:
 
 jobs:
   release_cli:
+    needs: release_lib
     runs-on: ubuntu-latest
     defaults:
       run:
