@@ -2,9 +2,11 @@ use aocf::{
     Aoc,
     cookie::get_session_cookie,
     find_root,
+    Level,
 };
 use aocf_cli::{
     pretty::make_pretty,
+    day::Day,
 };
 use aocf_cli::conf::Conf;
 use chrono::{Utc, Datelike};
@@ -173,8 +175,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         Command::Init => (),
         Command::SetCookie => (),
         Command::GetCookie => (),
-        Command::Exec => set_exec(&args.arg_arguments),
-        Command::Run => run_exec(args.flag_profile),
+        Command::Exec => set_exec(year, day, aoc.level, &args.arg_arguments)?,
+        Command::Run => run_exec(year, day, aoc.level, args.flag_profile)?,
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
@@ -340,10 +342,24 @@ fn get_cookie() -> Result<(), Error> {
     set_cookie(&cookie_value)
 }
 
-fn set_exec(args: &Vec<String>) {
+fn set_exec(year: Option<i32>, day: Option<u32>, level: Level, args: &Vec<String>) -> Result<(), Error> {
+    if let (Some(year), Some(day)) = (year, day) {
+        let conf_path = find_root()?.join(&year.to_string()).join(day.to_string());
+        let mut day_conf = Day::load(&conf_path)?;
+        day_conf.exec.insert(level, args.to_vec());
+    } else {
+        bail!("can't get day and year");
+    }
 
+    Ok(())
 }
 
-fn run_exec(profile: bool) {
+fn run_exec(year: Option<i32>, day: Option<u32>, level: Level, profile: bool) -> Result<(), Error> {
+    if let (Some(year), Some(day)) = (year, day) {
+        let conf_path = find_root()?.join(&year.to_string()).join(day.to_string());
+    } else {
+        bail!("can't get day and year");
+    }
 
+    Ok(())
 }
