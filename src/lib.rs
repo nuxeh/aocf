@@ -241,7 +241,7 @@ where
     ordered.serialize(serializer)
 }
 
-fn ensure_parent_dir(file: impl AsRef<Path>) -> Result<(), Error> {
+pub fn ensure_parent_dir(file: impl AsRef<Path>) -> Result<(), Error> {
     let without_path = file.as_ref().components().count() == 1;
     match file.as_ref().parent() {
         Some(dir) if !without_path => create_dir_all(dir)?,

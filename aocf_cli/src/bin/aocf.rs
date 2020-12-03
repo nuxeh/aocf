@@ -3,6 +3,7 @@ use aocf::{
     cookie::get_session_cookie,
     find_root,
     Level,
+    ensure_parent_dir,
 };
 use aocf_cli::{
     pretty::make_pretty,
@@ -345,8 +346,16 @@ fn get_cookie() -> Result<(), Error> {
 fn set_exec(year: Option<i32>, day: Option<u32>, level: Level, args: &Vec<String>) -> Result<(), Error> {
     if let (Some(year), Some(day)) = (year, day) {
         let conf_path = find_root()?.join(&year.to_string()).join(day.to_string());
-        let mut day_conf = Day::load(&conf_path)?;
+
+        let mut day_conf = if conf_path.exists() {
+            Day::load(&conf_path)?
+        } else {
+            ensure_parent_dir(&conf_path);
+            Day::default()
+        };
+
         day_conf.exec.insert(level, args.to_vec());
+        day_conf.write(conf_path)?;
     } else {
         bail!("can't get day and year");
     }
@@ -357,6 +366,7 @@ fn set_exec(year: Option<i32>, day: Option<u32>, level: Level, args: &Vec<String
 fn run_exec(year: Option<i32>, day: Option<u32>, level: Level, profile: bool) -> Result<(), Error> {
     if let (Some(year), Some(day)) = (year, day) {
         let conf_path = find_root()?.join(&year.to_string()).join(day.to_string());
+        let mut day_conf = Day::load(&conf_path)?;
     } else {
         bail!("can't get day and year");
     }
