@@ -175,8 +175,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         Command::Init => (),
         Command::SetCookie => (),
         Command::GetCookie => (),
-        Command::Exec => set_exec(year, day, aoc.level, &args.arg_arguments)?,
-        Command::Run => run_exec(year, day, aoc.level, args.flag_profile)?,
+        Command::Exec => set_exec(aoc.year, aoc.day, aoc.level, &args.arg_arguments)?,
+        Command::Run => run_exec(aoc.year, aoc.day, aoc.level, args.flag_profile)?,
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
