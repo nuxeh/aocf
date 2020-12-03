@@ -10,7 +10,7 @@
 
 A crate and CLI helper tool for [Advent of Code](https://adventofcode.com/).
 
-![demo](demo.svg)
+![demo](demo.gif)
 
 Written in Rust, but the CLI should be useful for development in any language.
 
