@@ -67,6 +67,10 @@ automatically.
 
 ## Installation
 
+[Install Rust](https://www.rust-lang.org/tools/install)
+
+Install `aocf`:
+
  - `cargo install aocf_cli`.
  - `cargo install --path .` from inside a cloned repository.
  - `cargo deb --install` from inside a cloned repository.
