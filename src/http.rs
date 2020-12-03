@@ -1,7 +1,3 @@
-extern crate regex;
-extern crate reqwest;
-extern crate html2md;
-
 use crate::{Aoc, Level};
 use html2md::parse_html;
 use failure::{Error, bail};
