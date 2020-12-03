@@ -233,7 +233,7 @@ impl Aoc {
 }
 
 /// Get an ordered hashmap representation when serialising
-fn ordered_map<S>(value: &HashMap<Level, String>, serializer: S) -> Result<S::Ok, S::Error>
+pub fn ordered_map<S>(value: &HashMap<Level, String>, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
 {

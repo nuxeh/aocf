@@ -37,6 +37,8 @@ Examples:
     aocf brief
     aocf input
     aocf submit <solution>
+    aocf exec <command>...
+    aocf run [--profile]
 
 Options:
     -h --help         Show this help message.
@@ -46,6 +48,7 @@ Options:
     -n --now          Use current day of the month.
     -v --view         Open in pager.
     -p --pretty       Pretty print brief output.
+    -P --profile      Run executables with profiling.
     --force           Force overwriting the cache.
 ";
 
@@ -70,6 +73,7 @@ struct Cliargs {
     flag_force: bool,
     flag_view: bool,
     flag_pretty: bool,
+    flag_profile: bool,
 }
 
 #[derive(Deserialize, PartialEq, Debug)]
@@ -86,6 +90,8 @@ enum Command {
     GetCookie,
     Edit,
     Checkout,
+    Exec,
+    Run,
 }
 
 fn main() {
@@ -167,6 +173,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         Command::Init => (),
         Command::SetCookie => (),
         Command::GetCookie => (),
+        Command::Exec => set_exec(&args.arg_arguments),
+        Command::Run => run_exec(args.flag_profile),
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
@@ -330,4 +338,12 @@ fn get_cookie() -> Result<(), Error> {
 
     let cookie_value = get_session_cookie(&tmp_path)?;
     set_cookie(&cookie_value)
+}
+
+fn set_exec(args: &Vec<String>) {
+
+}
+
+fn run_exec(profile: bool) {
+
 }
