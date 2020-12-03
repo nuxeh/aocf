@@ -183,10 +183,7 @@ fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
     if args.flag_pretty {
         // Cludgily post-process markdown
         let re = Regex::new(r"`\*(?P<content>.+?)\*`").unwrap();
-        let num_lines = text.lines().count();
         let display_text: String = text.lines()
-            .skip(2)
-            .take(num_lines - 4)
             .map(|l| format!("{}\n", l))
             .map(|l| re.replace_all(&l, "*`$content`*").to_string())
             .collect::<String>()

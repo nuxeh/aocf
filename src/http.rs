@@ -37,7 +37,14 @@ pub fn get_brief(aoc: &Aoc) -> Result<(String, String), Error> {
     let title = get_title(&brief).unwrap_or_default();
     let brief = get_html_section(&brief, "main").unwrap_or_else(|| "".to_string());
     let brief = parse_html(&brief);
-    let brief = brief.trim().to_string();
+    let num_lines = brief.lines().count();
+    let brief = brief.lines()
+        .skip(2)
+        .take(num_lines - 4)
+        .map(|l| format!("{}\n", l))
+        .collect::<String>()
+        .trim()
+        .to_string();
     Ok((title, brief))
 }
 
