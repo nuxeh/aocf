@@ -12,6 +12,8 @@ dependencies = [
 [[package]]
 name = "aocf"
 version = "0.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d3666d84aa92a484918d6592a5a3ac98df6c809e844f8a069eb9e423b28de516"
 dependencies = [
  "diesel",
  "failure",
