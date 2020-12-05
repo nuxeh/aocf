@@ -3,7 +3,6 @@
 , rustPlatform
 , pkg-config
 , openssl
-, sqlite
 }:
 
 rustPlatform.buildRustPackage rec {
@@ -16,7 +15,6 @@ rustPlatform.buildRustPackage rec {
 
   buildInputs = [
     openssl
-    sqlite
   ];
 
   meta = with lib; {
