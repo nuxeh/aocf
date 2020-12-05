@@ -8,7 +8,7 @@
 [![coveralls](https://img.shields.io/coveralls/github/nuxeh/aocf/master)](https://coveralls.io/github/nuxeh/aocf?branch=master)
 [![crates.io](https://img.shields.io/crates/v/aocf)](https://crates.io/crates/aocf)
 
-A crate and CLI helper tool for [Advent of Code](https://adventofcode.com/).
+A CLI tool (and also crate) for [Advent of Code](https://adventofcode.com/).
 
 ![demo](demo.gif)
 
