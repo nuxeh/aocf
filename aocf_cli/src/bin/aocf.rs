@@ -155,13 +155,26 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         Command::Fetch => {
             let _ = aoc.get_brief(args.flag_force)?;
             let _ = aoc.get_input(args.flag_force)?;
+            aoc.write()?;
         },
-        Command::Brief => display(args, &conf, &aoc.get_brief(args.flag_force)?)?,
-        Command::Input => display(args, &conf, &aoc.get_input(args.flag_force)?)?,
+        Command::Brief => {
+            let brief = aoc.get_brief(args.flag_force)?;
+            aoc.write()?;
+            display(args, &conf, &brief)?
+        },
+        Command::Input => {
+            let input = aoc.get_input(args.flag_force)?;
+            aoc.write()?;
+            display(args, &conf, &input)?
+        },
         Command::Submit => {
             println!("{}", aoc.submit(&args.arg_arguments[0])?);
+            aoc.write()?;
         },
-        Command::Advance => aoc.advance()?,
+        Command::Advance => {
+            aoc.advance()?;
+            aoc.write()?;
+        },
         Command::Status => status(&aoc)?,
         Command::Checkout => checkout(&mut conf, conf_hash, &args)?,
         Command::Init => (),
@@ -170,11 +183,10 @@ fn run(args: &Cliargs) -> Result<(), Error> {
         _ => bail!("command \"{:?}\" not implemented", args.arg_command),
     };
 
+    // Update configuration if changed since start
     if conf.calc_hash() != conf_hash {
         write_conf(&conf)?;
     }
-
-    aoc.write()?;
 
     Ok(())
 }
@@ -281,7 +293,6 @@ fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error
 
     if conf.calc_hash() != conf_hash {
         eprintln!("switched to year {}, day {}", conf.year, conf.day);
-        write_conf(conf)?;
     };
 
     Ok(())
