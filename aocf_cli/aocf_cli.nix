@@ -1,3 +1,5 @@
+# this will no longer build, since it requires a non-path `aocf` dependency to build
+
 { stdenv
 , lib
 , rustPlatform

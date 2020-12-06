@@ -10,7 +10,6 @@ fi
 
 sed -i "s/version = \"$FROM\"/version = \"$TO\"/" Cargo.toml
 sed -i "s/version = \"$FROM\"/version = \"$TO\"/" aocf_cli/Cargo.toml
-sed -i "s/aocf = \"$FROM\"/aocf = \"$TO\"/" aocf_cli/Cargo.toml
 
 cargo build
 cd aocf_cli
