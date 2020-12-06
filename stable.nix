@@ -5,9 +5,6 @@
 #
 #     git clone https://github.com/mozilla/nixpkgs-mozilla.git
 #     nix-shell stable.nix -I rustoverlay=/path/to/overlay
-#
-# If you want to update Rust versions to the nightly builds, just pull the
-# local overlay repository.
 
 with import <nixpkgs> {};
 with import <rustoverlay/rust-overlay.nix> pkgs pkgs;
