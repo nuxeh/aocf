@@ -20,7 +20,7 @@ dependencies = [
 
 [[package]]
 name = "aocf"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "diesel",
  "failure",
@@ -36,7 +36,7 @@ dependencies = [
 
 [[package]]
 name = "aocf_cli"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "aocf",
  "chrono",
