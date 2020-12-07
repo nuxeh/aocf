@@ -7,6 +7,7 @@
 [![windows](https://github.com/nuxeh/aocf/workflows/windows/badge.svg)](https://github.com/nuxeh/aocf/actions?query=branch%3Amaster+event%3Apush+workflow%3Awindows)
 [![coveralls](https://img.shields.io/coveralls/github/nuxeh/aocf/master)](https://coveralls.io/github/nuxeh/aocf?branch=master)
 [![crates.io](https://img.shields.io/crates/v/aocf)](https://crates.io/crates/aocf)
+[![crates.io](https://docs.rs/aocf/badge.svg)](https://docs.rs/aocf/)
 
 A CLI tool (and also crate) for [Advent of Code](https://adventofcode.com/).
 
