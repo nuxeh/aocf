@@ -4,96 +4,27 @@ use aocf::{
     find_root,
 };
 use aocf_cli::{
+    cli::{Aocf, AocfTimeDateOpts},
+    conf::Conf,
     pretty::make_pretty,
 };
-use aocf_cli::conf::Conf;
-use chrono::{Utc, Datelike};
 use dirs::home_dir;
-use docopt::Docopt;
 use std::env;
 use std::fs;
 use std::io::Write;
 use std::process::{self, Stdio};
 use tempfile::tempdir;
 use glob::glob;
-use serde::Deserialize;
 use failure::{Error, bail, format_err};
 use regex::Regex;
-
-include!(concat!(env!("OUT_DIR"), "/version.rs"));
-
-const USAGE: &str = "
-Advent of Code Swiss army knife.
-
-Usage:
-    aocf [options] [<command>] [<arguments>...]
-
-Examples:
-    aocf init
-    aocf set-cookie <content>
-    aocf get-cookie
-    aocf checkout <day> [<year>]
-    aocf fetch
-    aocf brief
-    aocf input
-    aocf submit <solution>
-
-Options:
-    -h --help         Show this help message.
-    --version         Print version.
-    -d --day=<day>    Specify challenge day.
-    -y --year=<year>  Specify challenge year.
-    -n --now          Use current day of the month.
-    -v --view         Open in pager.
-    -p --pretty       Pretty print brief output.
-    --force           Force overwriting the cache.
-";
-
-/*
-    aocf set [--global] <name> <value>
-    aocf gen-readme
-
-    --global                    Set variable globally for AoC root.
-    --edit                      Open in editor.
-*/
-
-// - https://github.com/rabuf/advent-of-code/blob/master/2019/2019.03.org
-// - tag git log
-
-#[derive(Deserialize)]
-struct Cliargs {
-    arg_command: Command,
-    arg_arguments: Vec<String>,
-    flag_day: Option<u32>,
-    flag_year: Option<i32>,
-    flag_now: bool,
-    flag_force: bool,
-    flag_view: bool,
-    flag_pretty: bool,
-}
-
-#[derive(Deserialize, PartialEq, Debug)]
-#[serde(rename_all = "kebab-case")]
-enum Command {
-    Fetch,
-    Input,
-    Brief,
-    Submit,
-    Advance,
-    Status,
-    Init,
-    SetCookie,
-    GetCookie,
-    Edit,
-    Checkout,
-}
+use structopt::StructOpt;
 
 fn main() {
-    let args: Cliargs = Docopt::new(USAGE)
-        .and_then(|d| d.version(Some(PKG_VERSION.to_string())).deserialize())
-        .unwrap_or_else(|e| e.exit());
+    let opt = Aocf::from_args();
 
-    run(&args).unwrap_or_else(|err| {
+    println!("{:#?}", opt);
+
+    run(&opt).unwrap_or_else(|err| {
         eprintln!("error: {}", err);
     });
 }
@@ -108,35 +39,16 @@ fn write_conf(conf: &Conf) -> Result<(), Error> {
     Ok(conf.write(&conf_path)?)
 }
 
-fn get_day_year(args: &Cliargs) -> (Option<u32>, Option<i32>) {
-    let (mut day, mut year) = if args.flag_now {
-        let now = Utc::now();
-        (Some(now.day()), Some(now.year()))
-    } else {
-        (None, None)
-    };
-
-    day = day.or(args.flag_day);
-    year = year.or(args.flag_year);
-
-    (day, year)
-}
-
-fn run(args: &Cliargs) -> Result<(), Error> {
-    match args.arg_command {
-        Command::Init => return Ok(init(&args)?),
-        Command::SetCookie => return Ok(set_cookie(&args.arg_arguments[0])?),
-        Command::GetCookie => return Ok(get_cookie()?),
+fn run(args: &Aocf) -> Result<(), Error> {
+    match args {
+        Aocf::Init => return Ok(init()?),
+        Aocf::SetCookie { token } => return Ok(set_cookie(&token)?),
+        Aocf::GetCookie => return Ok(get_cookie()?),
         _ => (),
     };
 
-    let (day, year) = get_day_year(args);
-
-    let mut conf = if day.is_none() || year.is_none() {
-        find_config().map_err(|e| format_err!("loading config: {}", e))?
-    } else {
-        find_config().unwrap_or_else(|_| Conf::default())
-    };
+    let mut conf = find_config()
+        .map_err(|e| format_err!("loading config: {}", e))?;
 
     let conf_hash = conf.calc_hash();
 
@@ -147,40 +59,35 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     }
 
     let mut aoc = Aoc::new()
-        .year(year.or(Some(conf.year)))
-        .day(day.or(Some(conf.day)))
+        .year(Some(conf.year))
+        .day(Some(conf.day))
         .init()?;
 
-    match args.arg_command {
-        Command::Fetch => {
-            let _ = aoc.get_brief(args.flag_force)?;
-            let _ = aoc.get_input(args.flag_force)?;
+    match args {
+        Aocf::Fetch { force } => {
+            let _ = aoc.get_brief(*force)?;
+            let _ = aoc.get_input(*force)?;
             aoc.write()?;
         },
-        Command::Brief => {
-            let brief = aoc.get_brief(args.flag_force)?;
+        Aocf::Brief { pretty, view, force } => {
+            let brief = aoc.get_brief(*force)?;
             aoc.write()?;
-            display(args, &conf, &brief)?
+            display(*pretty, *view, &conf, &brief)?
         },
-        Command::Input => {
-            let input = aoc.get_input(args.flag_force)?;
+        Aocf::Input { view, force } => {
+            let input = aoc.get_input(*force)?;
             aoc.write()?;
-            display(args, &conf, &input)?
+            display(false, *view, &conf, &input)?
         },
-        Command::Submit => {
-            println!("{}", aoc.submit(&args.arg_arguments[0])?);
-            aoc.write()?;
-        },
-        Command::Advance => {
-            aoc.advance()?;
+        Aocf::Submit { answer } => {
+            println!("{}", aoc.submit(answer)?);
             aoc.write()?;
         },
-        Command::Status => status(&aoc)?,
-        Command::Checkout => checkout(&mut conf, conf_hash, &args)?,
-        Command::Init => (),
-        Command::SetCookie => (),
-        Command::GetCookie => (),
-        _ => bail!("command \"{:?}\" not implemented", args.arg_command),
+        Aocf::Status => status(&aoc)?,
+        Aocf::Checkout ( args ) => checkout(&mut conf, conf_hash, &args)?,
+        Aocf::Init => (),
+        Aocf::SetCookie { .. } => (),
+        Aocf::GetCookie => (),
     };
 
     // Update configuration if changed since start
@@ -191,8 +98,8 @@ fn run(args: &Cliargs) -> Result<(), Error> {
     Ok(())
 }
 
-fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
-    if args.flag_pretty {
+fn display(pretty: bool, view: bool, conf: &Conf, text: &str) -> Result<(), Error> {
+    if pretty {
         // Cludgily post-process markdown
         let re = Regex::new(r"`\*(?P<content>.+?)\*`").unwrap();
         let display_text: String = text.lines()
@@ -203,7 +110,7 @@ fn display(args: &Cliargs, conf: &Conf, text: &str) -> Result<(), Error> {
             .replace(": \\*", ": **`*`**")
             .replace("\\---", "---");
         make_pretty(&display_text)?;
-    } else if args.flag_view {
+    } else if view {
         pager(conf, text)?;
     } else {
         print!("{}", text);
@@ -243,7 +150,7 @@ fn status(aoc: &Aoc) -> Result<(), Error> {
     Ok(())
 }
 
-fn init(args: &Cliargs) -> Result<(), Error> {
+fn init() -> Result<(), Error> {
     let conf_path = env::current_dir()?.join(".aocf");
     fs::create_dir_all(&conf_path)?;
 
@@ -252,14 +159,7 @@ fn init(args: &Cliargs) -> Result<(), Error> {
         bail!("configuration already exists at {}", config_path.display());
     };
 
-    let (day, year) = get_day_year(args);
-    let mut conf = Conf::default();
-    if let Some(d) = day {
-        conf.day = d;
-    };
-    if let Some(y) = year {
-        conf.year = y;
-    };
+    let conf = Conf::default();
     conf.write(&config_path)?;
 
     eprintln!("initialised config at {}", config_path.display());
@@ -267,26 +167,15 @@ fn init(args: &Cliargs) -> Result<(), Error> {
     Ok(())
 }
 
-fn checkout(conf: &mut Conf, conf_hash: u64, args: &Cliargs) -> Result<(), Error> {
-    let (day_f, year_f) = get_day_year(args);
+fn checkout(conf: &mut Conf, conf_hash: u64, args: &AocfTimeDateOpts) -> Result<(), Error> {
+    let (day, year) = args.get_day_year();
 
-    let day = if let Some(d) = args.arg_arguments.get(0) {
-        d.parse()?
-    } else if let Some(d) = day_f {
-        d
+    if let Some(d) = day {
+        conf.day = d;
     } else {
-        bail!("no day provided")
-    };
+        bail!("no day provided");
+    }
 
-    let year = if let Some(y) = args.arg_arguments.get(1) {
-        Some(y.parse()?)
-    } else if let Some(y) = year_f {
-        Some(y)
-    } else {
-        None
-    };
-
-    conf.day = day;
     if let Some(y) = year {
         conf.year = y;
     }

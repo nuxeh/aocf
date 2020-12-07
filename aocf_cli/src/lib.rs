@@ -3,3 +3,4 @@
 
 pub mod conf;
 pub mod pretty;
+pub mod cli;
