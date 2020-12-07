@@ -22,10 +22,9 @@ use structopt::StructOpt;
 fn main() {
     let opt = Aocf::from_args();
 
-    println!("{:#?}", opt);
-
     run(&opt).unwrap_or_else(|err| {
         eprintln!("error: {}", err);
+        process::exit(1);
     });
 }
 
