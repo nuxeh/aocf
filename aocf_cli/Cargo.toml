@@ -1,6 +1,6 @@
 [package]
 name = "aocf_cli"
-version = "0.1.8"
+version = "0.1.9"
 authors = ["Ed Cragg <ed@eipi.xyz>"]
 edition = "2018"
 license = "ISC"
@@ -16,7 +16,7 @@ name = "aocf"
 tempfile = "3.1.0"
 
 [dependencies]
-aocf = { path = "..", version = "0.1.8" }
+aocf = { path = "..", version = "0.1.9" }
 chrono = "0.4.19"
 docopt = "1.1.0"
 dirs = "3.0.1"
