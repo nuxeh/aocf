@@ -12,8 +12,12 @@ use failure::{Error, bail};
 
 mod http;
 pub mod cookie;
+mod cli;
 
-#[derive(Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord, Serialize, Deserialize)]
+use cli::AocOpts;
+use structopt::StructOpt;
+
+#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Level {
     First,
@@ -37,7 +41,7 @@ impl fmt::Display for Level {
 }
 
 /// A cache entry for a single day, containing all data related to that day's problem
-#[derive(Default, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct Aoc {
     pub year: Option<i32>,
     pub day: Option<u32>,
@@ -55,6 +59,8 @@ pub struct Aoc {
     cookie_path: Option<PathBuf>,
     #[serde(skip)]
     cookie: String,
+    #[serde(skip)]
+    input_file: Option<PathBuf>,
 }
 
 impl Aoc {
@@ -106,8 +112,14 @@ impl Aoc {
             };
         }
 
+        // Process CLI args
+        let opt = AocOpts::from_args();
+        self.input_file = opt.input;
+
         if let Ok(mut aoc) = self.load() {
+            // re-instate fields which will need to be overriden after successful load
             aoc.cookie = self.cookie;
+            aoc.input_file = self.input_file;
             Ok(aoc)
         } else {
             Ok(self)
@@ -127,11 +139,17 @@ impl Aoc {
 
     /// Get the input data
     pub fn get_input(&mut self, force: bool) -> Result<String, Error> {
+        if let Some(file) = &self.input_file {
+            return Ok(read_to_string(file)?.trim().to_string())
+        }
+
         if self.input.is_none() || force {
             let input = http::get_input(self)?;
             self.input = Some(input);
         }
+
         self.write()?;
+
         Ok(self.input.clone().unwrap())
     }
 
