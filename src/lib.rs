@@ -4,7 +4,7 @@
 use std::collections::{HashMap, BTreeMap};
 use std::fmt;
 use std::fs::{File, read_to_string, create_dir_all};
-use std::io::Write;
+use std::io::{self, Write, BufRead};
 use std::path::{Path, PathBuf};
 use std::env::current_dir;
 use serde::{Serialize, Serializer};
@@ -16,6 +16,7 @@ mod cli;
 
 use cli::AocOpts;
 use structopt::StructOpt;
+use atty::{is, Stream};
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -53,18 +54,22 @@ pub struct Aoc {
     brief: HashMap<Level, String>,
     #[serde(serialize_with = "ordered_map")]
     solution: HashMap<Level, String>,
+
+    #[serde(skip)]
+    cookie: String,
     #[serde(skip)]
     cache_path: Option<PathBuf>,
     #[serde(skip)]
     cookie_path: Option<PathBuf>,
-    #[serde(skip)]
-    cookie: String,
     /// Whether to parse CLI arguments locally
     #[serde(skip)]
     parse_cli: bool,
     /// Input file provided on CLI
     #[serde(skip)]
     input_file: Option<PathBuf>,
+    /// Whether the process is piped
+    #[serde(skip)]
+    stream: bool,
 }
 
 impl Aoc {
@@ -127,10 +132,14 @@ impl Aoc {
             self.input_file = opt.input;
         }
 
+        // Process piped status of the process
+        self.stream = is(Stream::Stdin);
+
         if let Ok(mut aoc) = self.load() {
             // re-instate fields which will need to be overriden after successful load
             aoc.cookie = self.cookie;
             aoc.input_file = self.input_file;
+            aoc.stream = self.stream;
             Ok(aoc)
         } else {
             Ok(self)
@@ -150,10 +159,26 @@ impl Aoc {
 
     /// Get the input data
     pub fn get_input(&mut self, force: bool) -> Result<String, Error> {
+        // Input file provided on CLI, read it
         if let Some(file) = &self.input_file {
             return Ok(read_to_string(file)?.trim().to_string())
         }
 
+        // We are piped, read the piped data
+        if !self.stream {
+            let stdin = io::stdin();
+
+            let data = stdin.lock().lines()
+                .flatten()
+                .fold(String::new(), |mut acc, line| {
+                    acc.push_str(&format!("{}\n", line));
+                    acc
+                });
+
+            return Ok(data);
+        }
+
+        // Get input data from adventofcode.com
         if self.input.is_none() || force {
             let input = http::get_input(self)?;
             self.input = Some(input);
