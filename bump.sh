@@ -11,9 +11,12 @@ fi
 sed -i "s/version = \"$FROM\"/version = \"$TO\"/" Cargo.toml
 sed -i "s/version = \"$FROM\"/version = \"$TO\"/" aocf_cli/Cargo.toml
 
-cargo build
+cargo build || exit
 cd aocf_cli
-cargo build
+cargo build || exit
+
+# requires `git-journal` -> `cargo install git-journal`
+git journal -o CHANGELOG.md
 
 cd ..
 git commit Cargo.toml aocf_cli/Cargo.toml aocf_cli/Cargo.lock -m "Bump v$FROM → v$TO"
