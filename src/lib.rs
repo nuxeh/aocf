@@ -74,7 +74,9 @@ pub struct Aoc {
 
 impl Aoc {
     pub fn new() -> Self {
-        Self::default()
+        let mut ret = Self::default();
+        ret.parse_cli = true;
+        ret
     }
 
     /// Set the year
