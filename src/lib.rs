@@ -112,6 +112,11 @@ impl Aoc {
         self
     }
 
+    /// Enable or disable CLI argument parsing
+    ///
+    /// If enabled, the binary's arguments will be parsed, allowing for
+    /// example, to choose a file to read in as alternative input data,
+    /// rather than using the input data fetched from Advent of Code.
     pub fn parse_cli(mut self, status: bool) -> Self {
         self.parse_cli = status;
         self
