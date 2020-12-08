@@ -58,6 +58,7 @@ fn run(args: &Aocf) -> Result<(), Error> {
     }
 
     let mut aoc = Aoc::new()
+        .parse_cli(false)
         .year(Some(conf.year))
         .day(Some(conf.day))
         .init()?;
