@@ -59,6 +59,10 @@ pub struct Aoc {
     cookie_path: Option<PathBuf>,
     #[serde(skip)]
     cookie: String,
+    /// Whether to parse CLI arguments locally
+    #[serde(skip)]
+    parse_cli: bool,
+    /// Input file provided on CLI
     #[serde(skip)]
     input_file: Option<PathBuf>,
 }
@@ -101,6 +105,11 @@ impl Aoc {
         self
     }
 
+    pub fn parse_cli(mut self, status: bool) -> Self {
+        self.parse_cli = status;
+        self
+    }
+
     /// Initialise (finish building)
     pub fn init(mut self) -> Result<Self, Error> {
         // Attempt to load cookie data
@@ -113,8 +122,10 @@ impl Aoc {
         }
 
         // Process CLI args
-        let opt = AocOpts::from_args();
-        self.input_file = opt.input;
+        if self.parse_cli {
+            let opt = AocOpts::from_args();
+            self.input_file = opt.input;
+        }
 
         if let Ok(mut aoc) = self.load() {
             // re-instate fields which will need to be overriden after successful load
