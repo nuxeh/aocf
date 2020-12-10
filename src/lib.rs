@@ -1,3 +1,4 @@
+#[cfg(feature = "sqlite")]
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate serde_derive;
 
@@ -11,6 +12,7 @@ use serde::{Serialize, Serializer};
 use failure::{Error, bail};
 
 mod http;
+#[cfg(feature = "sqlite")]
 pub mod cookie;
 mod cli;
 

@@ -22,6 +22,7 @@ dependencies = [
 name = "aocf"
 version = "0.1.10"
 dependencies = [
+ "atty",
  "diesel",
  "failure",
  "html2md",
@@ -31,6 +32,7 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
+ "structopt",
  "tempfile",
 ]
 
@@ -833,9 +835,9 @@ checksum = "4d58d1b70b004888f764dfbf6a26a3b0342a1632d33968e4a179d8011c760614"
 
 [[package]]
 name = "libsqlite3-sys"
-version = "0.16.0"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e5b95e89c330291768dc840238db7f9e204fd208511ab6319b56193a7f2ae25"
+checksum = "1e704a02bcaecd4a08b93a23f6be59d0bd79cd161e0963e9499165a0a35df7bd"
 dependencies = [
  "cc",
  "pkg-config",
