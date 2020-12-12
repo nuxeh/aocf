@@ -87,7 +87,24 @@ fn run(args: &Aocf) -> Result<(), Error> {
             let _ = aoc.get_input(*force)?;
             aoc.write()?;
         },
-        Aocf::Brief { pretty, view, force } => {
+        Aocf::Brief { pretty, view, force, now, day } => {
+            aoc = if *now {
+                let now = Utc::now();
+                Aoc::new()
+                    .parse_cli(false)
+                    .year(Some(now.year()))
+                    .day(Some(now.day()))
+                    .init()?
+            } else if let Some(d) = day {
+                Aoc::new()
+                    .parse_cli(false)
+                    .year(aoc.year)
+                    .day(Some(*d))
+                    .init()?
+            } else {
+                aoc
+            };
+
             let brief = aoc.get_brief(*force)?;
             aoc.write()?;
             display(*pretty, *view, &conf, &brief)?

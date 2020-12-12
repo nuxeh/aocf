@@ -30,6 +30,14 @@ pub enum Aocf {
         #[structopt(short, long, conflicts_with = "pretty")]
         view: bool,
 
+        /// View current day and year
+        #[structopt(short, long, conflicts_with = "day")]
+        now: bool,
+
+        /// Problem day to view
+        #[structopt(short, long, conflicts_with = "now")]
+        day: Option<u32>,
+
         /// Don't use cache
         #[structopt(short, long)]
         force: bool,
