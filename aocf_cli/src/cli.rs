@@ -46,6 +46,14 @@ pub enum Aocf {
         /// Don't use cache
         #[structopt(short, long)]
         force: bool,
+
+        /// Use current day and year
+        #[structopt(short, long, conflicts_with = "day")]
+        now: bool,
+
+        /// Problem day to use
+        #[structopt(short, long, conflicts_with = "now")]
+        day: Option<u32>,
     },
 
     /// Get current status

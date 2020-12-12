@@ -18,6 +18,7 @@ use glob::glob;
 use failure::{Error, bail, format_err};
 use regex::Regex;
 use structopt::StructOpt;
+use chrono::{Utc, Datelike};
 
 fn main() {
     let opt = Aocf::from_args();
@@ -64,7 +65,24 @@ fn run(args: &Aocf) -> Result<(), Error> {
         .init()?;
 
     match args {
-        Aocf::Fetch { force } => {
+        Aocf::Fetch { force, now, day } => {
+            aoc = if *now {
+                let now = Utc::now();
+                Aoc::new()
+                    .parse_cli(false)
+                    .year(Some(now.year()))
+                    .day(Some(now.day()))
+                    .init()?
+            } else if let Some(d) = day {
+                Aoc::new()
+                    .parse_cli(false)
+                    .year(aoc.year)
+                    .day(Some(*d))
+                    .init()?
+            } else {
+                aoc
+            };
+
             let _ = aoc.get_brief(*force)?;
             let _ = aoc.get_input(*force)?;
             aoc.write()?;
