@@ -1,3 +1,18 @@
+# v0.1.11
+
+- **Added** `--now` and `--day` flags to brief subcommand
+- **Added** `--day` and `--now` flags for fetch subcommand
+  - Allows fetching a given day without checking out that day first, useful
+    for peeking at a new problem, for example.
+- **Added** `git-journal` configuration
+- **Added** make diesel and sqlite optional dependencies behind sqlite feature
+- **Added** CLI parsing for input file to crate struct
+  - This allows an alternative input file to be used rather than fetched
+    input, useful for testing, or modifying the input.
+- **Added** buffering of input data from a pipe
+  - Alternative input data can now be provided by piping it to the built
+    binary implementing the Aoc stuct.
+
 # v0.1.10:
 
 - **Added** Parse CLI arguments with `structopt` rather than `docopt`
