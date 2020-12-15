@@ -1,6 +1,6 @@
 [package]
 name = "aocf"
-version = "0.1.12"
+version = "0.1.13"
 authors = ["Ed Cragg <ed@eipi.xyz>"]
 edition = "2018"
 license = "ISC"

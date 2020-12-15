@@ -1,3 +1,7 @@
+# v0.1.13
+
+- **Fixed** clippy warning
+
 # v0.1.12
 
 - **Added** `summary` subcommand
