@@ -2,6 +2,7 @@ use aocf::{
     Aoc,
     cookie::get_session_cookie,
     find_root,
+    Level,
 };
 use aocf_cli::{
     cli::{Aocf, AocfTimeDateOpts},
@@ -177,6 +178,16 @@ fn status(aoc: &Aoc) -> Result<(), Error> {
     if let Some(t) = &aoc.title {
         eprintln!("title: {}", t);
     };
+    if !aoc.solution.is_empty() {
+        eprintln!("solutions:");
+
+        if let Some(s) = aoc.solution.get(&Level::First) {
+            eprintln!("    1) {} ", s);
+        }
+        if let Some(s) = aoc.solution.get(&Level::Second) {
+            eprintln!("    2) {} ", s);
+        }
+    }
     if let Some(s) = aoc.stars {
         eprint!("stars: ");
         for _ in 0..s { eprint!("*"); };

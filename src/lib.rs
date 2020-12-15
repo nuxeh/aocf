@@ -51,11 +51,12 @@ pub struct Aoc {
     pub level: Level,
     pub title: Option<String>,
     pub stars: Option<u8>,
+    pub solution: HashMap<Level, String>,
+
     input: Option<String>,
     #[serde(serialize_with = "ordered_map")]
     brief: HashMap<Level, String>,
     #[serde(serialize_with = "ordered_map")]
-    solution: HashMap<Level, String>,
 
     #[serde(skip)]
     cookie: String,
