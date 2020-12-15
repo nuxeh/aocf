@@ -67,6 +67,13 @@ pub enum Aocf {
     /// Get current status
     Status,
 
+    /// Get summary of challenges and stars
+    Summary {
+        /// Specify the challenge year to view
+        #[structopt(short, long)]
+        year: Option<i32>,
+    },
+
     /// Initialise an aocf repository
     Init,
 
