@@ -1,3 +1,9 @@
+# v0.1.12
+
+- **Added** `summary` subcommand
+  - Gives a handy overview of all stars obtained.
+- **Added** printing of solutions for `aocf status` subcommand
+
 # v0.1.11
 
 - **Added** `--now` and `--day` flags to brief subcommand
