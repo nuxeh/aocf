@@ -4,13 +4,26 @@
 
 A CLI helper tool for [Advent of Code](https://adventofcode.com/).
 
+This is a wrapper around the `aocf` crate, and freely interoperates with it if
+needed.
+
 ## Install
 
 ```
 cargo install aocf_cli
 ```
 
-The tool will now be available as `aocf` for the user who ran this command.
+Or from source:
+
+```
+git clone https://github.com/aocf
+cd aocf/aocf_cli
+cargo install --path .
+```
+
+The tool will now be available as `aocf` for the user who ran this command. The
+cargo binary install path provided after cargo completes may need to be added
+to your shell's `PATH` variable.
 
 ## Commands
 
@@ -21,7 +34,7 @@ repository. Data and configuration for aocf is kept in `./.aocf`.
 
 ### `set-cookie`
 
-Write out the cookie using provided session cookie string.
+Write the cookie into cache using provided session cookie string.
 
 ### `get-cookie`
 
@@ -49,6 +62,16 @@ Print the currently checked out day's input.
 
 Show the current status (for the currently checked out day).
 
+### `summary`
+
+Show a summary of all challenges which exist in the cache, and stars achieved,
+for a given challenge year. The year shown is either the currently checked out
+year, or the year provided by the `--year` command line option.
+
+### `help`
+
+Get help on command usage, for a given subcommand.
+
 ## Option flags
 
 ### Time based flags
@@ -57,17 +80,23 @@ Show the current status (for the currently checked out day).
 * `--year`
 * `--day`
 
-These can be used to override the current day or year used when fetching,
-initialising, or other commands. Generally commands will get the day and year
-from the configuration if these are not provided.
+These can be used to override the current day or year used when fetching, or
+other commands. Generally commands will get the day and year from the
+root configuration if it exists, and these are not provided.
 
 ### Viewing flags
 
 * `--view`
 
-If no flags are given, `aocf` will generally output content on standard output;
-if `--view` is provided, output will be piped to the pager programme specified
-in the root configuration (`.aocf/config`) as e.g. `pager = "less"`.
+If no flags are given, `aocf` will generally output content on standard output
+or stderr; if `--view` is provided, output will be piped to the pager programme
+specified in the root configuration (`.aocf/config`) as e.g. `pager = "less"`.
+
+* `--pretty`
+
+Only available for the `brief` subcommand, pretty formats the challenge brief
+in a similar format to viewing on the Advent of Code website, in a scrollable,
+pager fashion.
 
 ### Retrieval flags
 
