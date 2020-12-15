@@ -204,7 +204,7 @@ fn summary(arg_year: Option<i32>, conf_year: i32) -> Result<(), Error> {
     let mut configs: Vec<_> = fs::read_dir(find_root()?.join(".aocf/cache"))?
         .map(|r| r.map(|e| e.path()))
         .flatten()
-        .map(|f| Aoc::load_json_from(f))
+        .map(Aoc::load_json_from)
         .flatten()
         .filter(|a| a.year == Some(year))
         .collect();
