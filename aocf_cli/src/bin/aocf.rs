@@ -20,6 +20,7 @@ use failure::{Error, bail, format_err};
 use regex::Regex;
 use structopt::StructOpt;
 use chrono::{Utc, Datelike};
+use std::iter;
 
 fn main() {
     let opt = Aocf::from_args();
@@ -119,7 +120,8 @@ fn run(args: &Aocf) -> Result<(), Error> {
             println!("{}", aoc.submit(answer)?);
             aoc.write()?;
         },
-        Aocf::Status => status(&aoc)?,
+        Aocf::Status { .. } => status(&aoc)?,
+        Aocf::Summary { year } => summary(*year, conf.year)?,
         Aocf::Checkout ( args ) => checkout(&mut conf, conf_hash, &args)?,
         Aocf::Init => (),
         Aocf::SetCookie { .. } => (),
@@ -193,6 +195,31 @@ fn status(aoc: &Aoc) -> Result<(), Error> {
         for _ in 0..s { eprint!("*"); };
         eprint!("\n");
     };
+    Ok(())
+}
+
+fn summary(arg_year: Option<i32>, conf_year: i32) -> Result<(), Error> {
+    let year = arg_year.unwrap_or(conf_year);
+
+    let mut configs: Vec<_> = fs::read_dir(find_root()?.join(".aocf/cache"))?
+        .map(|r| r.map(|e| e.path()))
+        .flatten()
+        .map(|f| Aoc::load_json_from(f))
+        .flatten()
+        .filter(|a| a.year == Some(year))
+        .collect();
+
+    configs.sort_by(|a, b| a.day.cmp(&b.day));
+
+    configs
+        .iter()
+        .for_each(|p| {
+            if let (Some(y), Some(d), Some(t), Some(s)) = (p.year, p.day, &p.title, p.stars) {
+                let s: String = iter::repeat('*').take(s.into()).collect();
+                println!("{} {:2} {:2} {}", y, d, s, t);
+            }
+        });
+
     Ok(())
 }
 
