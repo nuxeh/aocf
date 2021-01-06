@@ -14,7 +14,7 @@ diesel = { version = "1.4.5", features = ["sqlite"], optional = true }
 failure = "0.1.8"
 html2md = "0.2.10"
 regex = "1.4.2"
-reqwest = { version = "0.10.9", features = ["blocking"] }
+reqwest = { version = "0.11.0", features = ["blocking"] }
 serde = "1.0.117"
 serde_derive = "1.0.117"
 serde_json = "1.0.59"
