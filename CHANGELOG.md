@@ -1,3 +1,7 @@
+# v0.1.14
+
+- **Added** cache paths compatible with lexicographic sorting
+
 # v0.1.13
 
 - **Fixed** clippy warning
