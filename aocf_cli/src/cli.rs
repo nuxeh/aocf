@@ -1,7 +1,11 @@
-use structopt::StructOpt;
+use structopt::{StructOpt, clap::Shell};
 use chrono::{Utc, Datelike};
 
 include!(concat!(env!("OUT_DIR"), "/version.rs"));
+
+pub fn generate_completion(shell: Shell) {
+    Aocf::clap().gen_completions_to("aocf", shell, &mut std::io::stdout());
+}
 
 #[derive(StructOpt, Debug)]
 #[structopt(about = "Advent of Code Swiss army knife", version = PKG_VERSION)]
@@ -85,12 +89,19 @@ pub enum Aocf {
 
     /// Get authentication token from firefox cookie store
     GetCookie,
+
+    /// Generate shell completion script
+    Completion {
+        /// Shell type
+        #[structopt(possible_values = &["bash", "zsh", "fish", "powershell", "elvish"])]
+        shell: Shell,
+    }
 }
 
 #[derive(StructOpt, Debug)]
 pub struct AocfTimeDateOpts {
     /// Check out current day and year
-    #[structopt(short, long, conflicts_with_all = &["problem_day", "problem_year", "day", "year"])]
+    #[structopt(short, long, conflicts_with_all = &["problem-day", "problem-year", "day", "year"])]
     now: bool,
 
     /// Problem day
