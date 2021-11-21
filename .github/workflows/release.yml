@@ -37,7 +37,7 @@ jobs:
       - name: Build and test tool
         run: |
           cargo test --verbose
-          cargo clippy --verbose --all-features -- -D warnings
+          #cargo clippy --verbose --all-features -- -D warnings
           cargo build --verbose --release
 
       - name: Build Debian package for tool
