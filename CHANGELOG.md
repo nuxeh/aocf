@@ -1,3 +1,7 @@
+# v0.1.15
+
+- **Fixed** GitHub release workfow
+
 # v0.1.14
 
 - **Added** cache paths compatible with lexicographic sorting
