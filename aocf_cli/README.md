@@ -68,6 +68,11 @@ Show a summary of all challenges which exist in the cache, and stars achieved,
 for a given challenge year. The year shown is either the currently checked out
 year, or the year provided by the `--year` command line option.
 
+### `completion`
+
+Generate a shell completion script.
+Supported shells are Bash, Zsh, Fish, Powershell, Elvish.
+
 ### `help`
 
 Get help on command usage, for a given subcommand.

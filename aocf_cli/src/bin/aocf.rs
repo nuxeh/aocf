@@ -5,7 +5,7 @@ use aocf::{
     Level,
 };
 use aocf_cli::{
-    cli::{Aocf, AocfTimeDateOpts},
+    cli::{Aocf, AocfTimeDateOpts, generate_completion},
     conf::Conf,
     pretty::make_pretty,
 };
@@ -46,6 +46,7 @@ fn run(args: &Aocf) -> Result<(), Error> {
         Aocf::Init => return Ok(init()?),
         Aocf::SetCookie { token } => return Ok(set_cookie(&token)?),
         Aocf::GetCookie => return Ok(get_cookie()?),
+        Aocf::Completion { shell } => return Ok(generate_completion(*shell)),
         _ => (),
     };
 
@@ -123,9 +124,7 @@ fn run(args: &Aocf) -> Result<(), Error> {
         Aocf::Status { .. } => status(&aoc)?,
         Aocf::Summary { year } => summary(*year, conf.year)?,
         Aocf::Checkout ( args ) => checkout(&mut conf, conf_hash, &args)?,
-        Aocf::Init => (),
-        Aocf::SetCookie { .. } => (),
-        Aocf::GetCookie => (),
+        Aocf::Init | Aocf::SetCookie { .. } | Aocf::GetCookie | Aocf::Completion { .. } => (),
     };
 
     // Update configuration if changed since start
