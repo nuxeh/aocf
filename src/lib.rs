@@ -279,7 +279,7 @@ impl Aoc {
 
     fn get_default_cache_path(&self) -> Result<PathBuf, Error> {
         if let (Some(y), Some(d)) = (self.year, self.day) {
-            let p = PathBuf::from(&format!("./.aocf/cache/aoc{}_{}.json", y, d));
+            let p = PathBuf::from(&format!("./.aocf/cache/aoc{}_{:02}.json", y, d));
             if let Ok(r) = find_root() {
                 Ok(r.join(p))
             } else {
