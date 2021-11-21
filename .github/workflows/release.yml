@@ -101,7 +101,7 @@ jobs:
       - name: Build and test lib
         run: |
           cargo test --verbose
-          cargo clippy --verbose --all-features -- -D warnings
+          #cargo clippy --verbose --all-features -- -D warnings
           cargo build --verbose --release
 
       - name: Publish lib to crates.io
