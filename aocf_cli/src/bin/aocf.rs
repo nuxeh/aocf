@@ -20,7 +20,7 @@ use failure::{Error, bail, format_err};
 use regex::Regex;
 use structopt::StructOpt;
 use chrono::{Utc, Datelike};
-use std::iter;
+
 
 fn main() {
     let opt = Aocf::from_args();
@@ -33,20 +33,23 @@ fn main() {
 
 fn find_config() -> Result<Conf, Error> {
     let conf_path = find_root()?.join(".aocf/config");
-    Ok(Conf::load(&conf_path)?)
+    Conf::load(&conf_path)
 }
 
 fn write_conf(conf: &Conf) -> Result<(), Error> {
     let conf_path = find_root()?.join(".aocf/config");
-    Ok(conf.write(&conf_path)?)
+    conf.write(&conf_path)
 }
 
 fn run(args: &Aocf) -> Result<(), Error> {
     match args {
-        Aocf::Init => return Ok(init()?),
-        Aocf::SetCookie { token } => return Ok(set_cookie(&token)?),
-        Aocf::GetCookie => return Ok(get_cookie()?),
-        Aocf::Completion { shell } => return Ok(generate_completion(*shell)),
+        Aocf::Init => return init(),
+        Aocf::SetCookie { token } => return set_cookie(token),
+        Aocf::GetCookie => return get_cookie(),
+        Aocf::Completion { shell } => return {
+            generate_completion(*shell);
+            Ok(())
+        },
         _ => (),
     };
 
@@ -123,7 +126,7 @@ fn run(args: &Aocf) -> Result<(), Error> {
         },
         Aocf::Status { .. } => status(&aoc)?,
         Aocf::Summary { year } => summary(*year, conf.year)?,
-        Aocf::Checkout ( args ) => checkout(&mut conf, conf_hash, &args)?,
+        Aocf::Checkout ( args ) => checkout(&mut conf, conf_hash, args)?,
         Aocf::Init | Aocf::SetCookie { .. } | Aocf::GetCookie | Aocf::Completion { .. } => (),
     };
 
@@ -192,7 +195,7 @@ fn status(aoc: &Aoc) -> Result<(), Error> {
     if let Some(s) = aoc.stars {
         eprint!("stars: ");
         for _ in 0..s { eprint!("*"); };
-        eprint!("\n");
+        eprintln!();
     };
     Ok(())
 }
@@ -214,7 +217,7 @@ fn summary(arg_year: Option<i32>, conf_year: i32) -> Result<(), Error> {
         .iter()
         .for_each(|p| {
             if let (Some(y), Some(d), Some(t), Some(s)) = (p.year, p.day, &p.title, p.stars) {
-                let s: String = iter::repeat('*').take(s.into()).collect();
+                let s: String = "*".repeat(s.into());
                 println!("{} {:2} {:2} {}", y, d, s, t);
             }
         });
