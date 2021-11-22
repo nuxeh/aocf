@@ -37,6 +37,9 @@ fn main() {
 }
 ```
 
+Documentation for the `Aoc` structure can be found
+[here](https://docs.rs/aocf/latest/aocf/struct.Aoc.html).
+
 Downloaded data is cached as JSON and queried each time the `Aoc` is
 initialised, to avoid unecessary requests.
 
