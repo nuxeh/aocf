@@ -22,7 +22,7 @@ dependencies = [
 
 [[package]]
 name = "aocf"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "atty",
  "diesel",
@@ -40,7 +40,7 @@ dependencies = [
 
 [[package]]
 name = "aocf_cli"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "aocf",
  "chrono",

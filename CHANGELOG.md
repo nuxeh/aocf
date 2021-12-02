@@ -1,3 +1,8 @@
+# v0.1.16
+
+- **Added** Shell code completion generation
+- **Fixed** some clippy warnings
+
 # v0.1.15
 
 - **Fixed** GitHub release workfow
