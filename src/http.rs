@@ -2,9 +2,6 @@ use crate::{Aoc, Level};
 use html2md::parse_html;
 use failure::{Error, bail};
 use regex::Regex;
-use reqwest::blocking::Client;
-use reqwest::header;
-use std::collections::HashMap;
 
 const BASE: &str = "https://adventofcode.com";
 
@@ -19,12 +16,12 @@ fn get_url(aoc: &Aoc) -> Result<String, Error> {
 fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
     let url = format!("{}{}", get_url(aoc)?, suffix);
     let cookie = format!("session={}", aoc.cookie);
-    let input = Client::new()
-        .get(&url)
-        .header(header::COOKIE, cookie)
-        .send()?
-        .error_for_status()?
-        .text()?;
+
+    let input = ureq::get(&url)
+        .set("COOKIE", &cookie)
+        .call()?
+        .into_string()?;
+
     Ok(input)
 }
 
@@ -54,21 +51,17 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
     let cookie = format!("session={}", aoc.cookie);
 
     let level = match aoc.level {
-        Level::First => 1,
-        Level::Second => 2,
+        Level::First => "1",
+        Level::Second => "2",
     };
 
-    let mut params = HashMap::new();
-    params.insert("level", level.to_string());
-    params.insert("answer", solution.into());
-
-    let resp = Client::new()
-        .post(&url)
-        .header(header::COOKIE, cookie)
-        .form(&params)
-        .send()?
-        .error_for_status()?
-        .text()?;
+    let resp = ureq::post(&url)
+        .set("COOKIE", &cookie)
+        .send_form(&[
+            ("level", level),
+            ("answer", solution),
+        ])?
+        .into_string()?;
 
     let resp = get_html_section(&resp, "main").unwrap_or_else(|| "".to_string());
     let resp = parse_html(&resp);
