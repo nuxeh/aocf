@@ -16,7 +16,7 @@ name = "aocf"
 tempfile = "3.1.0"
 
 [dependencies]
-aocf = { path = "..", version = "0.1.13", features = ["sqlite"] }
+aocf = { path = "..", version = "0.1.15", features = ["sqlite", "html_parsing"] }
 chrono = "0.4.19"
 dirs = "3.0.1"
 failure = "0.1.8"
