@@ -1,6 +1,11 @@
-use crate::{Aoc, Level};
-use html2md::parse_html;
+use crate::Aoc;
 use failure::{Error, bail};
+
+#[cfg(feature = "html_parsing")]
+use crate::Level;
+#[cfg(feature = "html_parsing")]
+use html2md::parse_html;
+#[cfg(feature = "html_parsing")]
 use regex::Regex;
 
 const BASE: &str = "https://adventofcode.com";
@@ -25,6 +30,7 @@ fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
     Ok(input)
 }
 
+#[cfg(feature = "html_parsing")]
 pub fn get_brief(aoc: &Aoc) -> Result<(String, String), Error> {
     let brief = get_content(aoc, "")?;
     let title = get_title(&brief).unwrap_or_default();
@@ -46,6 +52,7 @@ pub fn get_input(aoc: &Aoc) -> Result<String, Error> {
     Ok(input)
 }
 
+#[cfg(feature = "html_parsing")]
 pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
     let url = format!("{}/answer", get_url(aoc)?);
     let cookie = format!("session={}", aoc.cookie);
@@ -69,6 +76,7 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
     Ok(resp)
 }
 
+#[cfg(feature = "html_parsing")]
 fn get_html_section(contents: &str, section: &str) -> Option<String> {
     let regex = format!("<{}>((.|\n)*?)</{}>", section, section);
     let regex = Regex::new(&regex).unwrap();
@@ -76,10 +84,12 @@ fn get_html_section(contents: &str, section: &str) -> Option<String> {
     Some(html.to_string())
 }
 
+#[cfg(feature = "html_parsing")]
 pub fn verify(text: &str) -> bool {
     text.contains("That's the right answer!")
 }
 
+#[cfg(feature = "html_parsing")]
 fn get_title(brief: &str) -> Option<String> {
     let regex = Regex::new("<h2>--- Day .*?: (.*?) ---</h2>").unwrap();
     let title = regex.captures(brief)?.get(1)?.as_str();

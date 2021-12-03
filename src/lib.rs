@@ -155,6 +155,7 @@ impl Aoc {
     }
 
     /// Get the problem brief as HTML and sanitise it to markdown
+    #[cfg(feature = "html_parsing")]
     pub fn get_brief(&mut self, force: bool) -> Result<String, Error> {
         if self.brief.get(&self.level).is_none() || force {
             let brief = http::get_brief(self)?;
@@ -198,6 +199,7 @@ impl Aoc {
     }
 
     /// Submit the solution
+    #[cfg(feature = "html_parsing")]
     pub fn submit(&mut self, solution: &str) -> Result<String, Error> {
         let resp = http::submit(self, solution)?;
         if http::verify(&resp) {
@@ -210,6 +212,7 @@ impl Aoc {
         Ok(resp)
     }
 
+    #[cfg(feature = "html_parsing")]
     fn add_star(&mut self) {
         if let Some(ref stars) = self.stars {
             self.stars = Some(stars + 1);
