@@ -16,8 +16,8 @@ cd aocf_cli
 cargo build || exit
 
 # requires `git-journal` -> `cargo install git-journal`
-git journal -o CHANGELOG.md
+#git journal -o CHANGELOG.md
 
 cd ..
-git commit Cargo.toml aocf_cli/Cargo.toml aocf_cli/Cargo.lock -m "Bump v$FROM → v$TO"
+git commit Cargo.toml aocf_cli/Cargo.toml aocf_cli/Cargo.lock CHANGELOG.md -m "Bump v$FROM → v$TO"
 git tag "v$TO"
