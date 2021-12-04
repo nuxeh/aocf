@@ -1,3 +1,8 @@
+# v0.1.17
+
+- **Added** feature to make html parsing optional
+- **Changed** `reqwest` for `ureq` as HTTP client library
+
 # v0.1.16
 
 - **Added** Shell code completion generation
