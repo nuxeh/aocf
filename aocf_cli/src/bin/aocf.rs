@@ -20,7 +20,7 @@ use failure::{Error, bail, format_err};
 use regex::Regex;
 use structopt::StructOpt;
 use chrono::{Utc, Datelike};
-
+use webbrowser;
 
 fn main() {
     let opt = Aocf::from_args();
@@ -93,7 +93,7 @@ fn run(args: &Aocf) -> Result<(), Error> {
             let _ = aoc.get_input(*force)?;
             aoc.write()?;
         },
-        Aocf::Brief { pretty, view, force, now, day } => {
+        Aocf::Brief { pretty, view, force, now, day, web } => {
             aoc = if *now {
                 let now = Utc::now();
                 Aoc::new()
@@ -111,9 +111,19 @@ fn run(args: &Aocf) -> Result<(), Error> {
                 aoc
             };
 
-            let brief = aoc.get_brief(*force)?;
-            aoc.write()?;
-            display(*pretty, *view, &conf, &brief)?
+            if *web {
+                if let (Some(d), Some(y)) = (aoc.day, aoc.year) {
+                    let url = format!("https://adventofcode.com/{}/day/{}", y, d);
+                    match webbrowser::open(&url) {
+                        Ok(_) => eprintln!("opened brief for day {}, year {} in web browser", d, y),
+                        Err(e) => eprintln!("error opening brief in web browser: {}", e),
+                    };
+                }
+            } else {
+                let brief = aoc.get_brief(*force)?;
+                aoc.write()?;
+                display(*pretty, *view, &conf, &brief)?
+            }
         },
         Aocf::Input { view, force } => {
             let input = aoc.get_input(*force)?;

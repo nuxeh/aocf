@@ -34,6 +34,10 @@ pub enum Aocf {
         #[structopt(short, long, conflicts_with = "pretty")]
         view: bool,
 
+        /// View in web browser
+        #[structopt(short, long, conflicts_with_all = &["pretty", "view"])]
+        web: bool,
+
         /// View current day and year
         #[structopt(short, long, conflicts_with = "day")]
         now: bool,
