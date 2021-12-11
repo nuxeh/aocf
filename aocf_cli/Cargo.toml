@@ -29,6 +29,7 @@ termimad = "0.9.1"
 crossterm = "0.17.7"
 regex = "1.4.2"
 structopt = "0.3.21"
+webbrowser = "0.5.5"
 
 [package.metadata.deb]
 extended-description = """\

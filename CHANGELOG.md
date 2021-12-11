@@ -1,3 +1,5 @@
+- **Added** `--web` flag for `brief` subcommand
+
 # v0.1.17
 
 - **Added** feature to make html parsing optional

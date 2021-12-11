@@ -103,6 +103,10 @@ Only available for the `brief` subcommand, pretty formats the challenge brief
 in a similar format to viewing on the Advent of Code website, in a scrollable,
 pager fashion.
 
+* `--web`
+
+Only available for the `brief` subcommand, opens the brief in a web browser.
+
 ### Retrieval flags
 
 * `--force`
