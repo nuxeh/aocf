@@ -116,7 +116,7 @@ fn run(args: &Aocf) -> Result<(), Error> {
                     let url = format!("https://adventofcode.com/{}/day/{}", y, d);
                     match webbrowser::open(&url) {
                         Ok(_) => eprintln!("opened brief for day {}, year {} in web browser", d, y),
-                        Err(e) => eprintln!("error opening brief in web browser: {}", e),
+                        Err(e) => bail!(e),
                     };
                 }
             } else {
