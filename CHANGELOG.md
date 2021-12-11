@@ -1,3 +1,5 @@
+# v0.1.18
+
 - **Added** `--web` flag for `brief` subcommand
 
 # v0.1.17
