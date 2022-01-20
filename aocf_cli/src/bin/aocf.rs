@@ -18,12 +18,12 @@ use tempfile::tempdir;
 use glob::glob;
 use failure::{Error, bail, format_err};
 use regex::Regex;
-use structopt::StructOpt;
+use clap::Parser;
 use chrono::{Utc, Datelike};
 use webbrowser;
 
 fn main() {
-    let opt = Aocf::from_args();
+    let opt = Aocf::parse();
 
     run(&opt).unwrap_or_else(|err| {
         eprintln!("error: {}", err);
