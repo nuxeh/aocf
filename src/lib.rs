@@ -17,7 +17,7 @@ pub mod cookie;
 mod cli;
 
 use cli::AocOpts;
-use structopt::StructOpt;
+use clap::Parser;
 use atty::{is, Stream};
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy, PartialOrd, Ord, Serialize, Deserialize)]
@@ -136,7 +136,7 @@ impl Aoc {
 
         // Process CLI args
         if self.parse_cli {
-            let opt = AocOpts::from_args();
+            let opt = AocOpts::parse();
             self.input_file = opt.input;
         }
 

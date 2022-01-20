@@ -1,53 +1,53 @@
-use structopt::{StructOpt, clap::Shell};
-use chrono::{Utc, Datelike};
-
-include!(concat!(env!("OUT_DIR"), "/version.rs"));
+use chrono::{Datelike, Utc};
+use clap::{Args, CommandFactory, Parser};
+use clap_complete::Shell;
 
 pub fn generate_completion(shell: Shell) {
-    Aocf::clap().gen_completions_to("aocf", shell, &mut std::io::stdout());
+    clap_complete::generate(shell, &mut Aocf::command(), "aocf", &mut std::io::stdout());
 }
 
-#[derive(StructOpt, Debug)]
-#[structopt(about = "Advent of Code Swiss army knife", version = PKG_VERSION)]
+/// Advent of Code Swiss army knife
+#[derive(Parser, Debug)]
+#[clap(version)]
 pub enum Aocf {
     /// Switch to a specified year and day
-    Checkout ( AocfTimeDateOpts ),
+    Checkout(AocfTimeDateOpts),
 
     /// Get input data for the current problem
     Input {
         /// View in pager
-        #[structopt(short, long)]
+        #[clap(short, long)]
         view: bool,
 
         /// Don't use cache
-        #[structopt(short, long)]
+        #[clap(short, long)]
         force: bool,
     },
 
     /// Get instructions for the current problem
     Brief {
         /// View pretty
-        #[structopt(short, long, conflicts_with = "view")]
+        #[clap(short, long, conflicts_with = "view")]
         pretty: bool,
 
         /// View in pager
-        #[structopt(short, long, conflicts_with = "pretty")]
+        #[clap(short, long, conflicts_with = "pretty")]
         view: bool,
 
         /// View in web browser
-        #[structopt(short, long, conflicts_with_all = &["pretty", "view"])]
+        #[clap(short, long, conflicts_with_all = &["pretty", "view"])]
         web: bool,
 
         /// View current day and year
-        #[structopt(short, long, conflicts_with = "day")]
+        #[clap(short, long, conflicts_with = "day")]
         now: bool,
 
         /// Problem day to view
-        #[structopt(short, long, conflicts_with = "now")]
+        #[clap(short, long, conflicts_with = "now")]
         day: Option<u32>,
 
         /// Don't use cache
-        #[structopt(short, long)]
+        #[clap(short, long)]
         force: bool,
     },
 
@@ -60,15 +60,15 @@ pub enum Aocf {
     /// Fetch brief and input data, if available
     Fetch {
         /// Don't use cache
-        #[structopt(short, long)]
+        #[clap(short, long)]
         force: bool,
 
         /// Use current day and year
-        #[structopt(short, long, conflicts_with = "day")]
+        #[clap(short, long, conflicts_with = "day")]
         now: bool,
 
         /// Problem day to use
-        #[structopt(short, long, conflicts_with = "now")]
+        #[clap(short, long, conflicts_with = "now")]
         day: Option<u32>,
     },
 
@@ -78,7 +78,7 @@ pub enum Aocf {
     /// Get summary of challenges and stars
     Summary {
         /// Specify the challenge year to view
-        #[structopt(short, long)]
+        #[clap(short, long)]
         year: Option<i32>,
     },
 
@@ -97,31 +97,31 @@ pub enum Aocf {
     /// Generate shell completion script
     Completion {
         /// Shell type
-        #[structopt(possible_values = &["bash", "zsh", "fish", "powershell", "elvish"])]
+        #[clap(arg_enum)]
         shell: Shell,
-    }
+    },
 }
 
-#[derive(StructOpt, Debug)]
+#[derive(Args, Debug)]
 pub struct AocfTimeDateOpts {
     /// Check out current day and year
-    #[structopt(short, long, conflicts_with_all = &["problem-day", "problem-year", "day", "year"])]
+    #[clap(short, long, conflicts_with_all = &["problem-day", "problem-year", "day", "year"])]
     now: bool,
 
     /// Problem day
-    #[structopt(short, long)]
+    #[clap(short, long)]
     day: Option<u32>,
 
     /// Problem year
-    #[structopt(short, long)]
+    #[clap(short, long)]
     year: Option<i32>,
 
     /// Problem day
-    #[structopt(conflicts_with_all = &["now", "day"], required_unless_one = &["now", "day"])]
+    #[clap(conflicts_with_all = &["now", "day"], required_unless_present_any = &["now", "day"])]
     problem_day: Option<u32>,
 
     /// Problem year
-    #[structopt(conflicts_with_all = &["now", "year"])]
+    #[clap(conflicts_with_all = &["now", "year"])]
     problem_year: Option<i32>,
 }
 
