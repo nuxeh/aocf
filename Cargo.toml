@@ -19,7 +19,7 @@ serde_derive = "1.0.117"
 serde_json = "1.0.59"
 tempfile = "3.1.0"
 libsqlite3-sys = { version = ">=0.8.0, <0.21.0", features = ["min_sqlite_version_3_7_16", "bundled"], optional = true }
-clap = { version = "3.1", features = ["derive"] }
+clap = { version = "4.0", features = ["derive"] }
 atty = "0.2.14"
 ureq = "2.2.0"
 
