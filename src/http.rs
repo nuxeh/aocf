@@ -10,6 +10,14 @@ use regex::Regex;
 
 const BASE: &str = "https://adventofcode.com";
 
+fn user_agent() -> String {
+    let repo = env!("CARGO_PKG_REPOSITORY");
+    let version = env!("CARGO_PKG_VERSION");
+    let authors = env!("CARGO_PKG_AUTHORS");
+    
+    format!("{}@{} by {}", repo, version, authors)
+}
+
 fn get_url(aoc: &Aoc) -> Result<String, Error> {
     let url = match (aoc.day, aoc.year) {
         (Some(d), Some(y)) => format!("{}/{}/day/{}", BASE, y, d),
@@ -21,9 +29,11 @@ fn get_url(aoc: &Aoc) -> Result<String, Error> {
 fn get_content(aoc: &Aoc, suffix: &str) -> Result<String, Error> {
     let url = format!("{}{}", get_url(aoc)?, suffix);
     let cookie = format!("session={}", aoc.cookie);
+    let user_agent = user_agent();
 
     let input = ureq::get(&url)
         .set("COOKIE", &cookie)
+        .set("User-Agent", &user_agent)
         .call()?
         .into_string()?;
 
@@ -56,6 +66,7 @@ pub fn get_input(aoc: &Aoc) -> Result<String, Error> {
 pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
     let url = format!("{}/answer", get_url(aoc)?);
     let cookie = format!("session={}", aoc.cookie);
+    let user_agent = user_agent();
 
     let level = match aoc.level {
         Level::First => "1",
@@ -64,6 +75,7 @@ pub fn submit(aoc: &Aoc, solution: &str) -> Result<String, Error> {
 
     let resp = ureq::post(&url)
         .set("COOKIE", &cookie)
+        .set("User-Agent", &user_agent)
         .send_form(&[
             ("level", level),
             ("answer", solution),
