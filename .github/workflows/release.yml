@@ -44,8 +44,8 @@ jobs:
         id: build_deb
         run: |
           cargo install cargo-deb
-          cargo deb | tee deb_out_path # get deb path from output of `cargo deb`
-          echo "path=$(cat deb_out_path)" >> $GITHUB_OUTPUT # provide deb output path as output
+          cargo deb | tee /tmp/deb_out_path # get deb path from output of `cargo deb`
+          echo "path=$(cat /tmp/deb_out_path)" >> $GITHUB_OUTPUT # provide deb output path as output
 
       - name: Create Github release
         id: make_release
