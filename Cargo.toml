@@ -10,7 +10,7 @@ repository = "https://github.com/nuxeh/aocf"
 keywords = ["advent", "code", "cli", "tool", "helper"]
 
 [dependencies]
-diesel = { version = "1.4.5", features = ["sqlite"], optional = true }
+diesel = { version = "2.0.2", features = ["sqlite"], optional = true }
 failure = "0.1.8"
 html2md = { version = "0.2.10", optional = true }
 regex = "1.4.2"
