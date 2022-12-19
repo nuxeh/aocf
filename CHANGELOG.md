@@ -1,3 +1,7 @@
+# v0.1.21
+
+- **Added** Identify the tool via User-Agent
+
 # v0.1.18
 
 - **Added** `--web` flag for `brief` subcommand
