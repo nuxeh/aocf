@@ -41,9 +41,11 @@ jobs:
           cargo build --verbose --release
 
       - name: Build Debian package for tool
+        id: build_deb
         run: |
           cargo install cargo-deb
-          cargo deb
+          cargo deb | tee deb_out_path # get deb path from output of `cargo deb`
+          echo "path=$(cat deb_out_path)" >> $GITHUB_OUTPUT # provide deb output path as output
 
       - name: Create Github release
         id: make_release
@@ -63,7 +65,7 @@ jobs:
         with:
           upload_url: ${{ steps.make_release.outputs.upload_url }}
           asset_content_type: application/vnd.debian.binary-package
-          asset_path: aocf_cli/target/debian/aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+          asset_path: ${{ steps.build_deb.outputs.path }}
           asset_name: aocf_cli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
 
       - name: Publish tool to crates.io
