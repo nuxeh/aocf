@@ -13,7 +13,7 @@ dependencies = [
 
 [[package]]
 name = "aocf"
-version = "0.1.18"
+version = "0.1.19"
 dependencies = [
  "atty",
  "clap",
@@ -31,7 +31,7 @@ dependencies = [
 
 [[package]]
 name = "aocf_cli"
-version = "0.1.18"
+version = "0.1.19"
 dependencies = [
  "aocf",
  "chrono",
