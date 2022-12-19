@@ -250,7 +250,7 @@ impl Aoc {
         if let Some(ref p) = self.cache_path {
             self.write_json_to(p)
         } else {
-            self.write_json_to(&self.get_default_cache_path()?)
+            self.write_json_to(self.get_default_cache_path()?)
         }
     }
 
@@ -265,7 +265,7 @@ impl Aoc {
         if let Some(ref p) = self.cache_path {
             Self::load_json_from(p)
         } else {
-            Self::load_json_from(&self.get_default_cache_path()?)
+            Self::load_json_from(self.get_default_cache_path()?)
         }
     }
 
