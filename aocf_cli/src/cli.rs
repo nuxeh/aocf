@@ -16,7 +16,7 @@ pub enum Aocf {
     /// Get input data for the current problem
     Input {
         /// View in pager
-        #[clap(short, long)]
+        #[clap(short, long = "pager")]
         view: bool,
 
         /// Don't use cache
@@ -35,7 +35,7 @@ pub enum Aocf {
         pretty: bool,
 
         /// View in pager
-        #[clap(short, long, conflicts_with = "pretty")]
+        #[clap(short, long = "pager", conflicts_with = "pretty")]
         view: bool,
 
         /// View in web browser
