@@ -125,10 +125,14 @@ fn run(args: &Aocf) -> Result<(), Error> {
                 display(*pretty, *view, &conf, &brief)?
             }
         },
-        Aocf::Input { view, force } => {
+        Aocf::Input { view, force, info } => {
             let input = aoc.get_input(*force)?;
             aoc.write()?;
-            display(false, *view, &conf, &input)?
+            if *info {
+                strinfo(&input)?
+            } else {
+                display(false, *view, &conf, &input)?
+            }
         },
         Aocf::Submit { answer } => {
             println!("{}", aoc.submit(answer)?);
@@ -145,6 +149,11 @@ fn run(args: &Aocf) -> Result<(), Error> {
         write_conf(&conf)?;
     }
 
+    Ok(())
+}
+
+fn strinfo(text: &str) -> Result<(), Error> {
+    println!("{} bytes, {} lines", text.len(), text.lines().count());
     Ok(())
 }
 

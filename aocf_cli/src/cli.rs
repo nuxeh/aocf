@@ -22,6 +22,10 @@ pub enum Aocf {
         /// Don't use cache
         #[clap(short, long)]
         force: bool,
+
+        /// Show input data stats
+        #[clap(short, long, conflicts_with = "view")]
+        info: bool,
     },
 
     /// Get instructions for the current problem
