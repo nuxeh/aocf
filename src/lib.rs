@@ -161,8 +161,8 @@ impl Aoc {
             let brief = http::get_brief(self)?;
             self.title = Some(brief.0);
             self.brief.insert(self.level, brief.1);
+            self.write()?;
         };
-        self.write()?;
         Ok(self.brief.get(&self.level).unwrap().to_string())
     }
 
@@ -191,9 +191,8 @@ impl Aoc {
         if self.input.is_none() || force {
             let input = http::get_input(self)?;
             self.input = Some(input);
+            self.write()?;
         }
-
-        self.write()?;
 
         Ok(self.input.clone().unwrap())
     }
@@ -207,8 +206,8 @@ impl Aoc {
             self.get_brief(true).ok(); // Update brief (force) to update stars
             self.add_star();
             self.advance().unwrap_or(());
+            self.write()?;
         }
-        self.write()?;
         Ok(resp)
     }
 
