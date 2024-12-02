@@ -6,7 +6,7 @@ stdenv.mkDerivation {
     buildInputs = [
       rustc
       cargo
-      pkgconfig
+      pkg-config
       openssl
       sqlite
     ];
